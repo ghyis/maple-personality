@@ -1328,6 +1328,14 @@ body::after {
    RESPONSIVE
    ============================================================ */
 @media screen and (max-width: 600px) {
+    body.quiz-active {
+        overflow: hidden;
+        height: 100dvh;
+        width: 100%;
+        position: fixed;
+        inset: 0;
+    }
+
     .page { padding: 12px; gap: 8px; }
     .card-frame { padding: 12px; }
     .card-inner { padding: 12px 14px; }
@@ -1336,39 +1344,37 @@ body::after {
     .choices { padding: 8px 12px 8px 28px; }
 
     #quiz-page.page {
+        position: fixed;
+        inset: 0;
         overflow: hidden;
         max-height: 100dvh;
-        padding: 6px 10px 8px;
+        padding: 6px 10px max(8px, env(safe-area-inset-bottom, 8px));
     }
 
     #quiz {
-        display: grid;
-        grid-template-rows: auto minmax(0, 24dvh) auto;
-        align-content: start;
-        gap: 0;
+        position: relative;
+        width: 100%;
         height: 100%;
         min-height: 0;
         overflow: hidden;
     }
 
     #quiz .progress-wrap {
-        grid-row: 1;
+        position: relative;
+        z-index: 3;
+        flex-shrink: 0;
     }
 
     #quiz .question-image-slot {
-        position: relative;
-        top: auto;
-        left: auto;
-        transform: none;
-        grid-row: 2;
-        width: 100%;
-        height: auto;
-        max-height: 24dvh;
-        min-height: 0;
-        align-self: start;
-        justify-self: center;
-        margin-bottom: -28px;
+        position: fixed;
+        top: 22dvh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(88vw, 300px);
+        height: min(26dvh, 200px);
+        margin: 0;
         z-index: 1;
+        pointer-events: none;
     }
 
     #quiz #question-image {
@@ -1376,57 +1382,88 @@ body::after {
         min-height: 0;
         width: auto;
         height: auto;
-        max-width: min(88vw, 320px);
-        max-height: min(22dvh, 200px);
+        max-width: 100%;
+        max-height: min(26dvh, 200px);
     }
 
     #quiz #quest-card {
-        grid-row: 3;
-        margin-top: -12px;
-        margin-bottom: 0;
-        max-height: min(62dvh, 68%);
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        top: 50dvh;
+        bottom: auto;
+        margin: 0;
+        max-width: none;
+        max-height: calc(52dvh - env(safe-area-inset-bottom, 0px));
         min-height: 0;
-        width: 100%;
-        align-self: start;
+        width: auto;
         z-index: 2;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     #quiz #quest-card .card-inner {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
         max-height: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: hidden;
+    }
+
+    #quiz #quest-card .card-eyebrow {
+        font-size: 10px;
+        flex-shrink: 0;
     }
 
     #quiz #quest-card.card-frame {
-        padding: 10px 10px 12px;
+        padding: 8px 10px 10px;
     }
 
     #quiz #question {
-        font-size: clamp(11px, 3.2vw, 13px);
-        line-height: 1.35;
+        font-size: 11px;
+        line-height: 1.3;
+        flex-shrink: 0;
     }
 
     #quiz #choices {
-        gap: 6px;
-        padding: 2px 4px 6px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1 1 auto;
+        min-height: 0;
+        gap: 3px;
+        padding: 2px 2px 4px;
+        overflow: hidden;
     }
 
     #quiz .choices {
-        padding: 8px 14px 8px 28px;
-        font-size: 12px;
+        flex: 1 1 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        padding: 5px 10px 5px 24px;
+        font-size: 10px;
+        line-height: 1.2;
     }
 
-    #quiz.is-collect-mode {
-        grid-template-rows: minmax(0, 24dvh) auto;
+    #quiz .choices::before {
+        left: 12px;
+        font-size: 11px;
+    }
+
+    #quiz.is-collect-mode .progress-wrap {
+        display: none !important;
     }
 
     #quiz.is-collect-mode .question-image-slot {
-        margin-bottom: -28px;
+        top: 18dvh;
     }
 
     #quiz.is-collect-mode #quest-card {
-        margin-top: -12px;
-        max-height: min(68dvh, 72%);
+        top: 42dvh;
+        max-height: calc(58dvh - env(safe-area-inset-bottom, 0px));
     }
 }
 @media screen and (max-height: 520px) {
@@ -1434,17 +1471,15 @@ body::after {
     .maple-subtitle { display: none; }
     .progress-track { height: 12px; }
     #quiz .question-image-slot {
-        width: 100%;
-        height: 100%;
+        top: 16dvh;
+        height: min(22dvh, 160px);
     }
     #quiz #question-image {
-        min-width: 0;
-        min-height: 0;
-        max-height: 100%;
+        max-height: min(22dvh, 160px);
     }
     #quiz #quest-card {
-        margin-top: 0;
-        max-height: min(55dvh, 58%);
+        top: 44dvh;
+        max-height: calc(56dvh - env(safe-area-inset-bottom, 0px));
     }
     #quest-card.card-frame { max-height: none; }
     .loading-gif-slot img {
@@ -2302,9 +2337,33 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================================
 // Buttons
 // ============================================================
-document.getElementById('back-to-home').addEventListener('click', () => {
-    location.reload();
-});
+function returnToHomeFromResults() {
+    resetResultFlipCard();
+
+    var results = document.getElementById('results');
+    var home = document.getElementById('home');
+    var quizPage = document.getElementById('quiz-page');
+
+    if (results) results.style.display = 'none';
+    if (quizPage) quizPage.style.display = 'none';
+    if (home) {
+        home.style.display = 'flex';
+        home.classList.remove('is-leaving');
+        home.style.opacity = '';
+    }
+
+    if (typeof window.restartMapleQuiz === 'function') {
+        window.restartMapleQuiz();
+    }
+
+    var beginBtn = document.getElementById('begin-quiz');
+    if (beginBtn) beginBtn.disabled = false;
+
+    document.body.classList.remove('quiz-active');
+    window.scrollTo(0, 0);
+}
+
+document.getElementById('back-to-home').addEventListener('click', returnToHomeFromResults);
 
 document.querySelector('.share-button').addEventListener('click', () => {
     const img = document.getElementById('result-card-img');

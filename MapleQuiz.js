@@ -284,6 +284,7 @@ function displayQuiz() {
             home.style.display = 'none';
             home.classList.remove('is-leaving');
             quizPage.style.display = 'flex';
+            document.body.classList.add('quiz-active');
 
             if (quizFadeMs === 0) {
                 quizPage.classList.remove('is-entering', 'is-visible');
@@ -451,15 +452,9 @@ function displayQuiz() {
 
         console.log("MBTI Type:", mbtiTypeString);
 
-        //Remove quiz-related elements from the DOM
-        const questionElement = document.getElementById('question');
-        const choiceContainers = document.getElementById('choices');
-        const quizContainer = document.getElementById('quiz');
-        const thumbnailImage = document.querySelector('img[src="Thumbnail.gif"]');
-        if (questionElement) questionElement.remove();
-        if (choiceContainers) choiceContainers.remove();
-        if (quizContainer) quizContainer.remove();
-        if (thumbnailImage) thumbnailImage.remove();
+        const quizPage = document.getElementById('quiz-page');
+        if (quizPage) quizPage.style.display = 'none';
+        document.body.classList.remove('quiz-active');
 
         if (typeof window.showMapleResult === 'function') {
             window.showMapleResult(mbtiTypeString);
@@ -500,8 +495,50 @@ function displayQuiz() {
             imageElement.src = imageURL;
 
             mbtiImageContainer.appendChild(imageElement);
+        }
 
+    function resetQuizState() {
+        currentQuestionIndex = 0;
+        introvertScore = 0;
+        extrovertScore = 0;
+        judgingScore = 0;
+        perceivingScore = 0;
+        sensingScore = 0;
+        intuitionScore = 0;
+        thinkingScore = 0;
+        feelingScore = 0;
+
+        const quizEl = document.getElementById('quiz');
+        const questCard = document.getElementById('quest-card');
+        const questionImage = document.getElementById('question-image');
+        const quizPage = document.getElementById('quiz-page');
+
+        if (quizEl) quizEl.classList.remove('is-collect-mode');
+        if (questCard) questCard.classList.remove('is-collect-step');
+        if (questionImage) {
+            questionImage.classList.remove('loaded');
+            questionImage.removeAttribute('src');
+            questionImage.style.transform = '';
+        }
+        if (quizPage) {
+            quizPage.style.display = 'none';
+            quizPage.classList.remove('is-entering', 'is-visible');
+        }
+        document.body.classList.remove('quiz-active');
+
+        const beginBtn = document.getElementById('begin-quiz');
+        if (beginBtn) beginBtn.disabled = false;
+
+        if (window.__quizDebug) {
+            window.__quizDebug.mbti = '';
+            window.__quizDebug.scores = { I: 0, E: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        }
+
+        displayCurrentQuestion();
     }
+
+    window.restartMapleQuiz = resetQuizState;
+
         //Display the first question when the quiz starts
         displayCurrentQuestion();
         document.addEventListener('DOMContentLoaded', () => {

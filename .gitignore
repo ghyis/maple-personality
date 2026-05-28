@@ -1,0 +1,19 @@
+# Local archive — don't ship this to Pages
+Maple Personality.zip
+
+# Apple Illustrator working file
+Apple.ai
+
+# UI design references — keep on disk but don't deploy
+# (delete this line if you DO want to ship them)
+# ui references/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor junk
+.vscode/
+.idea/
+*.swp

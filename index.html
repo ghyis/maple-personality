@@ -1343,7 +1343,9 @@ body::after {
 
     #quiz {
         display: grid;
-        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-rows: auto minmax(0, 24dvh) auto;
+        align-content: start;
+        gap: 0;
         height: 100%;
         min-height: 0;
         overflow: hidden;
@@ -1360,11 +1362,13 @@ body::after {
         transform: none;
         grid-row: 2;
         width: 100%;
-        height: 100%;
+        height: auto;
+        max-height: 24dvh;
         min-height: 0;
-        max-height: none;
-        align-self: center;
+        align-self: start;
         justify-self: center;
+        margin-bottom: -28px;
+        z-index: 1;
     }
 
     #quiz #question-image {
@@ -1372,17 +1376,19 @@ body::after {
         min-height: 0;
         width: auto;
         height: auto;
-        max-width: min(92vw, 360px);
-        max-height: 100%;
+        max-width: min(88vw, 320px);
+        max-height: min(22dvh, 200px);
     }
 
     #quiz #quest-card {
         grid-row: 3;
-        margin-top: 0;
+        margin-top: -12px;
         margin-bottom: 0;
-        max-height: min(50dvh, 52%);
+        max-height: min(62dvh, 68%);
         min-height: 0;
         width: 100%;
+        align-self: start;
+        z-index: 2;
     }
 
     #quiz #quest-card .card-inner {
@@ -1411,12 +1417,16 @@ body::after {
     }
 
     #quiz.is-collect-mode {
-        grid-template-rows: minmax(0, 1fr) auto;
+        grid-template-rows: minmax(0, 24dvh) auto;
+    }
+
+    #quiz.is-collect-mode .question-image-slot {
+        margin-bottom: -28px;
     }
 
     #quiz.is-collect-mode #quest-card {
-        margin-top: 0;
-        max-height: min(58dvh, 62%);
+        margin-top: -12px;
+        max-height: min(68dvh, 72%);
     }
 }
 @media screen and (max-height: 520px) {

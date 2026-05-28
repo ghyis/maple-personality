@@ -300,7 +300,7 @@ body::after {
     object-fit: contain;
     background: transparent;
     opacity: 0;
-    transition: opacity 0.12s ease;
+    transition: opacity 0.07s ease;
     pointer-events: none;
     margin: 0;
     transform-origin: center center;
@@ -1334,19 +1334,107 @@ body::after {
     .button-row { gap: 10px; }
     .maple-btn { min-width: 0; padding: 8px 14px; font-size: 13px; }
     .choices { padding: 8px 12px 8px 28px; }
+
+    #quiz-page.page {
+        overflow: hidden;
+        max-height: 100dvh;
+        padding: 6px 10px 8px;
+    }
+
+    #quiz {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    #quiz .progress-wrap {
+        grid-row: 1;
+    }
+
+    #quiz .question-image-slot {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        grid-row: 2;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        max-height: none;
+        align-self: center;
+        justify-self: center;
+    }
+
+    #quiz #question-image {
+        min-width: 0;
+        min-height: 0;
+        width: auto;
+        height: auto;
+        max-width: min(92vw, 360px);
+        max-height: 100%;
+    }
+
+    #quiz #quest-card {
+        grid-row: 3;
+        margin-top: 0;
+        margin-bottom: 0;
+        max-height: min(50dvh, 52%);
+        min-height: 0;
+        width: 100%;
+    }
+
+    #quiz #quest-card .card-inner {
+        max-height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #quiz #quest-card.card-frame {
+        padding: 10px 10px 12px;
+    }
+
+    #quiz #question {
+        font-size: clamp(11px, 3.2vw, 13px);
+        line-height: 1.35;
+    }
+
+    #quiz #choices {
+        gap: 6px;
+        padding: 2px 4px 6px;
+    }
+
+    #quiz .choices {
+        padding: 8px 14px 8px 28px;
+        font-size: 12px;
+    }
+
+    #quiz.is-collect-mode {
+        grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    #quiz.is-collect-mode #quest-card {
+        margin-top: 0;
+        max-height: min(58dvh, 62%);
+    }
 }
 @media screen and (max-height: 520px) {
     .maple-title { width: min(90vw, 520px); }
     .maple-subtitle { display: none; }
     .progress-track { height: 12px; }
-    .question-image-slot {
-        width: min(115vw, 640px);
-        height: min(108vh, 720px);
+    #quiz .question-image-slot {
+        width: 100%;
+        height: 100%;
     }
-    #question-image {
+    #quiz #question-image {
         min-width: 0;
-        min-height: min(78vh, 520px);
-        max-height: min(108vh, 720px);
+        min-height: 0;
+        max-height: 100%;
+    }
+    #quiz #quest-card {
+        margin-top: 0;
+        max-height: min(55dvh, 58%);
     }
     #quest-card.card-frame { max-height: none; }
     .loading-gif-slot img {

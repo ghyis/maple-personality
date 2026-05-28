@@ -206,7 +206,7 @@ function displayQuiz() {
     }
     window.updateQuizProgress = updateQuizProgress;
 
-    const QUESTION_IMAGE_FADE_MS = 130;
+    const QUESTION_IMAGE_FADE_MS = 65;
 
     function revealQuestionImage(questionImageElement) {
         function onReady() {
@@ -259,7 +259,7 @@ function displayQuiz() {
             }
 
             questionImageElement.addEventListener('transitionend', onFadeOut);
-            setTimeout(finishFadeOut, QUESTION_IMAGE_FADE_MS + 50);
+            setTimeout(finishFadeOut, QUESTION_IMAGE_FADE_MS + 25);
         } else {
             swapImage();
         }

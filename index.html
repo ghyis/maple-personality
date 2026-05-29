@@ -1504,16 +1504,18 @@ body::after {
         z-index: 2;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        align-items: stretch;
+        overflow-x: hidden;
+        overflow-y: hidden;
     }
 
     #quiz #quest-card .card-inner {
         display: flex;
         flex-direction: column;
         flex: 0 0 auto;
-        min-height: 0;
-        gap: 4px;
-        overflow: hidden;
+        min-height: auto;
+        gap: 6px;
+        overflow: visible;
     }
 
     #quiz #quest-card .card-eyebrow {
@@ -1529,13 +1531,15 @@ body::after {
     #quiz #question {
         font-size: clamp(11.5px, 3.2vw, 14px);
         line-height: 1.35;
+        flex: 0 0 auto;
         flex-shrink: 0;
-        max-height: 3.6em;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
+        width: 100%;
+        max-height: none;
+        margin: 0 0 2px;
+        overflow: visible;
+        display: block;
+        position: relative;
+        z-index: 1;
     }
 
     #quiz #choices {
@@ -1543,14 +1547,18 @@ body::after {
         flex-direction: column;
         gap: 4px;
         flex: 0 0 auto;
-        min-height: 0;
+        flex-shrink: 0;
+        min-height: auto;
+        margin-top: 0;
         padding: 0 1px 2px;
-        overflow: hidden;
+        overflow: visible;
+        position: relative;
+        z-index: 2;
     }
 
     #quiz .choices {
-        flex: 0 1 auto;
-        flex-shrink: 1;
+        flex: 0 0 auto;
+        flex-shrink: 0;
         width: 100%;
         min-height: var(--quiz-choice-min-h);
         height: auto;
@@ -1610,11 +1618,6 @@ body::after {
     .maple-title { width: min(90vw, 520px); }
     .maple-subtitle { display: none; }
     .progress-track { height: 12px; }
-    #quiz #question {
-        max-height: 3.2em;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-    }
     #quest-card.card-frame { max-height: none; }
     .loading-gif-slot img {
         max-width: min(75vw, 200px);
@@ -2520,7 +2523,7 @@ document.querySelector('.share-button').addEventListener('click', () => {
 </script>
 
 <!-- Quiz logic -->
-<script src="MapleQuiz.js?v=9"></script>
+<script src="MapleQuiz.js?v=10"></script>
 
 </body>
 </html>

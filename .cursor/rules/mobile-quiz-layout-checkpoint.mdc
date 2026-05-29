@@ -1,0 +1,26 @@
+---
+description: Mobile quiz layout checkpoint — do not change unless user explicitly asks
+globs: index.html
+alwaysApply: false
+---
+
+# Mobile quiz layout checkpoint (approved)
+
+The mobile quiz UI (`@media screen and (max-width: 600px)` in `index.html`) is **locked** as of this checkpoint unless the user makes a **specific, explicit** request to change it.
+
+## Do not change without explicit user request
+
+- Progress bar / Q label / % position (`--quiz-progress-block`, top padding, progress-wrap margins)
+- Chibi image slot: fixed position, `max-width: 100%`, `--quiz-chibi-max`, no right-side clip
+- Current Quest panel: **fixed top** at `--quiz-quest-top: 50dvh`, grows **downward only** (not flow layout that moves the panel up/down per question)
+- Question text: full height, no line-clamp overlap with buttons; answers pushed below question (`flex-shrink: 0` on choices)
+- No scroll on the answer list (`overflow` on `#choices` must stay non-scroll)
+- Mobile quiz font sizes for question and answers (unless user asks to change fonts)
+
+## Safe to change when asked
+
+- Home page mobile logo/title offset (`#home .maple-title` transform) — separate from quiz checkpoint
+- Desktop quiz layout (`min-width: 601px` block)
+- Share toast, results, home landing GIF, scoring in `MapleQuiz.js`
+
+When adjusting mobile quiz, read the existing `@media (max-width: 600px)` block first and make minimal diffs.

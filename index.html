@@ -627,6 +627,49 @@ body::after {
     letter-spacing: 0.5px;
 }
 
+.maple-toast {
+    position: fixed;
+    left: 50%;
+    bottom: max(20px, env(safe-area-inset-bottom, 20px));
+    transform: translateX(-50%) translateY(16px);
+    z-index: 9999;
+    max-width: min(92vw, 360px);
+    padding: 12px 18px;
+    background: var(--charcoal);
+    border-radius: 14px;
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.12),
+        0 10px 28px rgba(0, 0, 0, 0.2);
+    font-family: 'MapleStory';
+    font-weight: 400;
+    font-size: clamp(12px, 3.2vw, 14px);
+    line-height: 1.4;
+    color: var(--lime-text);
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.maple-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.maple-toast[hidden] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .maple-toast {
+        transition: opacity 0.15s ease;
+        transform: translateX(-50%);
+    }
+    .maple-toast.is-visible {
+        transform: translateX(-50%);
+    }
+}
+
 /* ============================================================
    QUIZ PAGE
    ============================================================ */
@@ -1633,6 +1676,7 @@ body::after {
 <body>
 
 <div class="sparkles" aria-hidden="true"></div>
+<div id="maple-toast" class="maple-toast" role="status" aria-live="polite" hidden></div>
 
 <!-- ============================================================
      HOME PAGE
@@ -2510,6 +2554,37 @@ function returnToHomeFromResults() {
 
 document.getElementById('back-to-home').addEventListener('click', returnToHomeFromResults);
 
+var mapleToastHideTimer = null;
+var mapleToastExitTimer = null;
+
+function showMapleToast(message, durationMs) {
+    var toast = document.getElementById('maple-toast');
+    if (!toast) return;
+
+    if (mapleToastHideTimer) {
+        clearTimeout(mapleToastHideTimer);
+        mapleToastHideTimer = null;
+    }
+    if (mapleToastExitTimer) {
+        clearTimeout(mapleToastExitTimer);
+        mapleToastExitTimer = null;
+    }
+
+    toast.textContent = message;
+    toast.hidden = false;
+    requestAnimationFrame(function() {
+        toast.classList.add('is-visible');
+    });
+
+    mapleToastHideTimer = setTimeout(function() {
+        toast.classList.remove('is-visible');
+        mapleToastExitTimer = setTimeout(function() {
+            toast.hidden = true;
+            toast.textContent = '';
+        }, 320);
+    }, durationMs || 2800);
+}
+
 function downloadResultImage(img) {
     const a = document.createElement('a');
     a.href = img.src;
@@ -2574,20 +2649,20 @@ async function copyResultImageToClipboard(img) {
 document.querySelector('.share-button').addEventListener('click', async function() {
     var img = document.getElementById('result-card-img');
     if (!img || !img.src) {
-        alert('No result image to share yet!');
+        showMapleToast('Reveal your MapleCard first!');
         return;
     }
 
     try {
         await copyResultImageToClipboard(img);
-        alert('Image copied to clipboard!');
+        showMapleToast('Image copied to clipboard!');
     } catch (err) {
         console.warn('Clipboard copy failed, downloading instead:', err);
         try {
             downloadResultImage(img);
-            alert('Could not copy — image downloaded instead.');
+            showMapleToast('Could not copy — image downloaded instead.', 3200);
         } catch (downloadErr) {
-            alert('Could not copy or download the image.');
+            showMapleToast('Could not copy or download the image.', 3200);
         }
     }
 });

@@ -1417,9 +1417,9 @@ body::after {
         --quiz-progress-block: 3.25rem;
         --quiz-quest-top: 50dvh;
         --quiz-chibi-max: 52dvh;
-        --quiz-choice-font: clamp(10px, 2.75vw, 11.5px);
-        --quiz-choice-pad-y: 5px;
-        --quiz-choice-min-h: 28px;
+        --quiz-choice-font: clamp(11px, 3.1vw, 13px);
+        --quiz-choice-pad-y: 6px;
+        --quiz-choice-min-h: 32px;
         position: fixed;
         inset: 0;
         overflow: hidden;
@@ -1460,15 +1460,18 @@ body::after {
     #quiz .question-image-slot {
         position: fixed;
         top: calc(4px + var(--quiz-progress-block) + 4px);
-        left: 10px;
-        right: 10px;
+        left: 0;
+        right: 0;
+        width: 100%;
         height: calc(var(--quiz-quest-top) - var(--quiz-progress-block) - 12px);
         max-height: var(--quiz-chibi-max);
         min-height: 0;
         margin: 0;
+        padding: 0 6px;
+        box-sizing: border-box;
         z-index: 1;
         pointer-events: none;
-        overflow: hidden;
+        overflow: visible;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1480,10 +1483,11 @@ body::after {
         min-height: 0 !important;
         width: auto;
         height: auto;
-        max-width: min(96vw, calc(var(--quiz-chibi-max) * 1.15));
+        max-width: 100%;
         max-height: 100%;
         margin: 0 auto;
         object-fit: contain;
+        transform-origin: center center;
     }
 
     #quiz #quest-card {
@@ -1513,7 +1517,7 @@ body::after {
     }
 
     #quiz #quest-card .card-eyebrow {
-        font-size: 9px;
+        font-size: 10px;
         flex-shrink: 0;
     }
 
@@ -1523,8 +1527,8 @@ body::after {
     }
 
     #quiz #question {
-        font-size: clamp(9.5px, 2.6vw, 11px);
-        line-height: 1.25;
+        font-size: clamp(10.5px, 2.9vw, 12.5px);
+        line-height: 1.3;
         flex-shrink: 0;
         max-height: 3.6em;
         overflow: hidden;
@@ -1565,9 +1569,9 @@ body::after {
     }
 
     #quiz .choices::before {
-        left: 11px;
+        left: 12px;
         top: 50%;
-        font-size: 10px;
+        font-size: 11px;
         transform: translateY(-50%);
     }
 
@@ -1599,8 +1603,8 @@ body::after {
     #quiz-page.page {
         --quiz-quest-top: 46dvh;
         --quiz-chibi-max: 46dvh;
-        --quiz-choice-min-h: 26px;
-        --quiz-choice-font: clamp(9.5px, 2.6vw, 11px);
+        --quiz-choice-min-h: 30px;
+        --quiz-choice-font: clamp(10.5px, 2.9vw, 12px);
     }
 
     .maple-title { width: min(90vw, 520px); }
@@ -2516,7 +2520,7 @@ document.querySelector('.share-button').addEventListener('click', () => {
 </script>
 
 <!-- Quiz logic -->
-<script src="MapleQuiz.js?v=7"></script>
+<script src="MapleQuiz.js?v=8"></script>
 
 </body>
 </html>

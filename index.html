@@ -2510,9 +2510,7 @@ function returnToHomeFromResults() {
 
 document.getElementById('back-to-home').addEventListener('click', returnToHomeFromResults);
 
-document.querySelector('.share-button').addEventListener('click', () => {
-    const img = document.getElementById('result-card-img');
-    if (!img || !img.src) { alert('No result image to share yet!'); return; }
+function downloadResultImage(img) {
     const a = document.createElement('a');
     a.href = img.src;
     const srcParts = img.src.split('/');
@@ -2520,6 +2518,78 @@ document.querySelector('.share-button').addEventListener('click', () => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+}
+
+function waitForResultImage(img) {
+    if (img.complete && img.naturalWidth > 0) {
+        return Promise.resolve();
+    }
+    return new Promise(function(resolve, reject) {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', reject, { once: true });
+    });
+}
+
+async function copyResultImageToClipboard(img) {
+    await waitForResultImage(img);
+
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+        throw new Error('Clipboard API not supported');
+    }
+
+    var blob = null;
+
+    try {
+        var response = await fetch(img.src, { cache: 'force-cache' });
+        if (response.ok) {
+            blob = await response.blob();
+        }
+    } catch (_) { /* fall through to canvas */ }
+
+    if (!blob || !blob.type.startsWith('image/')) {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        var ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Canvas not supported');
+        ctx.drawImage(img, 0, 0);
+        blob = await new Promise(function(resolve, reject) {
+            canvas.toBlob(function(b) {
+                if (b) resolve(b);
+                else reject(new Error('Could not encode image'));
+            }, 'image/png');
+        });
+    }
+
+    var type = blob.type && blob.type.startsWith('image/') ? blob.type : 'image/png';
+    await navigator.clipboard.write([
+        new ClipboardItem((function() {
+            var item = {};
+            item[type] = blob;
+            return item;
+        })())
+    ]);
+}
+
+document.querySelector('.share-button').addEventListener('click', async function() {
+    var img = document.getElementById('result-card-img');
+    if (!img || !img.src) {
+        alert('No result image to share yet!');
+        return;
+    }
+
+    try {
+        await copyResultImageToClipboard(img);
+        alert('Image copied to clipboard!');
+    } catch (err) {
+        console.warn('Clipboard copy failed, downloading instead:', err);
+        try {
+            downloadResultImage(img);
+            alert('Could not copy — image downloaded instead.');
+        } catch (downloadErr) {
+            alert('Could not copy or download the image.');
+        }
+    }
 });
 
 </script>

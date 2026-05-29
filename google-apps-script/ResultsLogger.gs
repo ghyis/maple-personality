@@ -3,7 +3,7 @@
  *
  * Tabs:
  *   raw   — column A: class result (row 2+), column B: shared Yes/No
- *   graph — fixed class order + COUNTIF counts + bar chart
+ *   graph — fixed class order + COUNTIF counts + bar chart; row 19 = Shared? count
  *
  * Deploy as Web app (Execute as: Me, Anyone) → paste /exec URL in index.html
  */
@@ -97,6 +97,10 @@ function setupGraphSheet_(ss) {
       '=COUNTIF(raw!A:A,"' + cls.replace(/"/g, '""') + '")'
     );
   }
+
+  var sharedRow = CLASS_ORDER.length + 3;
+  sheet.getRange(sharedRow, 1).setValue('Shared?');
+  sheet.getRange(sharedRow, 2).setFormula('=COUNTIF(raw!B:B,"Yes")');
 
   var charts = sheet.getCharts();
   for (var c = 0; c < charts.length; c++) {

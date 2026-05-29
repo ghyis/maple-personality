@@ -7,7 +7,8 @@ Tab "raw" (from row 2):
   Column B = Shared (No until they press SHARE, then Yes for that completion)
 
 Tab "graph":
-  Classes in fixed order with COUNTIF counts + column bar chart (updates automatically).
+  Rows 2–17: classes in fixed order with COUNTIF counts + column bar chart (chart uses rows 1–17 only).
+  Row 19: Shared? | count of Yes in raw column B.
 
 SETUP
 -----

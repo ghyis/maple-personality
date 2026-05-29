@@ -1414,7 +1414,7 @@ body::after {
     .choices { padding: 8px 12px 8px 28px; }
 
     #quiz-page.page {
-        --quiz-progress-block: 3.25rem;
+        --quiz-progress-block: 4rem;
         --quiz-quest-top: 50dvh;
         --quiz-chibi-max: 52dvh;
         --quiz-choice-font: clamp(12px, 3.5vw, 14.5px);
@@ -1424,7 +1424,8 @@ body::after {
         inset: 0;
         overflow: hidden;
         max-height: 100dvh;
-        padding: 4px 10px max(6px, env(safe-area-inset-bottom, 6px));
+        padding: 10px 10px max(6px, env(safe-area-inset-bottom, 6px));
+        padding-top: max(10px, env(safe-area-inset-top, 10px));
     }
 
     #quiz {
@@ -1440,11 +1441,12 @@ body::after {
         z-index: 4;
         flex-shrink: 0;
         width: 100%;
-        margin-bottom: 4px;
+        margin-top: 6px;
+        margin-bottom: 6px;
     }
 
     #quiz .progress-header {
-        margin-bottom: 4px;
+        margin-bottom: 5px;
         gap: 10px;
     }
 
@@ -2523,7 +2525,7 @@ document.querySelector('.share-button').addEventListener('click', () => {
 </script>
 
 <!-- Quiz logic -->
-<script src="MapleQuiz.js?v=10"></script>
+<script src="MapleQuiz.js?v=11"></script>
 
 </body>
 </html>

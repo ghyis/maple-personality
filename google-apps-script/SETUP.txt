@@ -1,19 +1,34 @@
-Maple Personality — log quiz results to Google Sheets (no cookies)
+Maple Personality — Google Sheets (raw + bar graph, no cookies)
 
-1. Create a new Google Sheet.
-2. Row 1 headers (optional — script adds sheet "Results" if missing):
-   timestamp | mbti | result_image | page
-3. Extensions → Apps Script → paste ResultsLogger.gs → Save.
-4. Deploy → New deployment → Type: Web app
+WHAT YOU GET
+------------
+Tab "raw" (from row 2):
+  Column A = class result (Ren, Kaiser, pally, …)
+  Column B = Shared (No until they press SHARE, then Yes for that completion)
+
+Tab "graph":
+  Classes in fixed order with COUNTIF counts + column bar chart (updates automatically).
+
+SETUP
+-----
+1. Create a new Google Sheet (can be empty).
+2. Extensions → Apps Script → replace code with ResultsLogger.gs → Save.
+3. Run setupSheets once (dropdown → setupSheets → Run → authorize).
+   This creates "raw" and "graph" tabs + the chart.
+4. Deploy → New deployment → Web app
    - Execute as: Me
    - Who has access: Anyone
-5. Copy the deployment URL (must end with /exec).
+5. Copy the URL ending in /exec.
 6. In index.html set:
    window.MAPLE_RESULTS_SHEET_URL = 'https://script.google.com/macros/s/XXXX/exec';
-7. Commit and push to GitHub Pages.
+7. git commit + push to GitHub Pages.
 
-Each finished quiz sends one POST when the result screen loads (MBTI type only — no cookies, no personal IDs).
+CLASS ORDER (graph)
+-------------------
+Ren, Kaiser, pally, Bla, Cad, Pf, Bish, Adele, Ds, Ab, Lara, Hayato, Shad, Hero, Nl, Merc
 
-Test: open the /exec URL in a browser — you should see {"ok":true,"message":"..."}.
-
-Privacy: Anyone with the Web App URL could POST fake rows. For a small quiz this is usually fine; for stricter control add a shared secret in the script and in MAPLE_RESULTS_SHEET_URL query string.
+NOTES
+-----
+- No cookies; one row per finished quiz; SHARE updates column B on that row only.
+- Google Analytics (gtag) is separate — still tracks page visits.
+- Re-deploy the Web app after any Apps Script change (New deployment version).

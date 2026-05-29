@@ -1860,6 +1860,26 @@ const MBTI_IMAGE_URLS = {
     ENTJ: 'result_merc.png',
 };
 
+/** Sheet / graph labels (must match google-apps-script ResultsLogger.gs CLASS_ORDER) */
+const MBTI_TO_CLASS = {
+    ISTJ: 'Ren',
+    ISFJ: 'Kaiser',
+    INFJ: 'pally',
+    INTJ: 'Bla',
+    ISTP: 'Cad',
+    ISFP: 'Pf',
+    INFP: 'Bish',
+    INTP: 'Adele',
+    ESTP: 'Ds',
+    ESFP: 'Ab',
+    ENFP: 'Lara',
+    ENTP: 'Hayato',
+    ESTJ: 'Shad',
+    ESFJ: 'Hero',
+    ENFJ: 'Nl',
+    ENTJ: 'Merc',
+};
+
 const LOADING_LINES = [
     'gathering herbs',
     'brewing potion',
@@ -2234,16 +2254,13 @@ function setupResultFlipCard(imageURL, preloadImg) {
     resultImg.alt = 'Your MapleStory personality result';
 }
 
-function logQuizResultToSheet(mbtiTypeString, imageURL) {
-    var url = (window.MAPLE_RESULTS_SHEET_URL || '').trim();
-    if (!url || !mbtiTypeString) return;
+function getClassNameFromMbti(mbtiTypeString) {
+    return MBTI_TO_CLASS[mbtiTypeString] || mbtiTypeString || '';
+}
 
-    var payload = {
-        mbti: mbtiTypeString,
-        resultImage: imageURL || '',
-        timestamp: new Date().toISOString(),
-        page: (window.location.pathname || '/') + (window.location.search || '')
-    };
+function postToResultsSheet(payload) {
+    var url = (window.MAPLE_RESULTS_SHEET_URL || '').trim();
+    if (!url) return;
 
     try {
         fetch(url, {
@@ -2254,6 +2271,26 @@ function logQuizResultToSheet(mbtiTypeString, imageURL) {
             mode: 'cors'
         }).catch(function() {});
     } catch (_) { /* ignore */ }
+}
+
+function logQuizResultToSheet(mbtiTypeString) {
+    if (!mbtiTypeString) return;
+
+    window.__mapleResultSession = { logged: true, shared: false };
+
+    postToResultsSheet({
+        action: 'logResult',
+        className: getClassNameFromMbti(mbtiTypeString),
+        shared: false
+    });
+}
+
+function markResultSharedInSheet() {
+    var session = window.__mapleResultSession;
+    if (!session || !session.logged || session.shared) return;
+
+    session.shared = true;
+    postToResultsSheet({ action: 'markShared' });
 }
 
 window.showMapleResult = function(mbtiTypeString) {
@@ -2269,6 +2306,8 @@ window.showMapleResult = function(mbtiTypeString) {
     if (qp) qp.style.display = 'none';
 
     if (!results || !loading || !reveal || !statusEl || !resultImg) return;
+
+    window.__mapleResultSession = { logged: false, shared: false };
 
     resetResultFlipCard();
     reveal.hidden = true;
@@ -2313,7 +2352,7 @@ window.showMapleResult = function(mbtiTypeString) {
 
         window.__quizDebug.mbti = mbtiTypeString;
         renderResultDetails();
-        logQuizResultToSheet(mbtiTypeString, imageURL);
+        logQuizResultToSheet(mbtiTypeString);
     }
 
     preload.onload = function() { imageReady = true; tryRevealResult(); };
@@ -2563,6 +2602,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Buttons
 // ============================================================
 function returnToHomeFromResults() {
+    window.__mapleResultSession = null;
     resetResultFlipCard();
 
     var results = document.getElementById('results');
@@ -2691,11 +2731,13 @@ document.querySelector('.share-button').addEventListener('click', async function
 
     try {
         await copyResultImageToClipboard(img);
+        markResultSharedInSheet();
         showMapleToast('Image copied to clipboard!');
     } catch (err) {
         console.warn('Clipboard copy failed, downloading instead:', err);
         try {
             downloadResultImage(img);
+            markResultSharedInSheet();
             showMapleToast('Could not copy — image downloaded instead.', 3200);
         } catch (downloadErr) {
             showMapleToast('Could not copy or download the image.', 3200);

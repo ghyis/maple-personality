@@ -17,10 +17,16 @@ The mobile quiz UI (`@media screen and (max-width: 600px)` in `index.html`) is *
 - No scroll on the answer list (`overflow` on `#choices` must stay non-scroll)
 - Mobile quiz font sizes for question and answers (unless user asks to change fonts)
 
+## Never mix with broken desktop “scaling” experiments
+
+- Do **not** add per-property `--desk-scale` / `calc(... * var(--desk-scale))` on fonts only — that makes **text** resize while image, quest, progress bar, and buttons stay fixed.
+- Desktop shrink (when user asks): use **`zoom: var(--desk-ui-scale)`** on `#home.page`, `#quiz-page.page`, `#results.page` at `min-width: 601px` only, with `min(1, 100vw/1280, 100dvh/900)`. Never apply zoom or desk-scale inside `@media (max-width: 600px)`.
+- The approved **mobile** snapshot is git commit **`a7faeaf`** (`@media (max-width: 600px)` block). Restore from that commit if mobile regresses.
+
 ## Safe to change when asked
 
 - Home page mobile logo/title offset (`#home .maple-title` transform) — separate from quiz checkpoint
-- Desktop quiz layout (`min-width: 601px` block)
-- Share toast, results, home landing GIF, scoring in `MapleQuiz.js`
+- Desktop-only layout (`min-width: 601px` block) — only when user explicitly asks; never change mobile block at the same time
+- Share toast, results, home landing GIF, scoring in `MapleQuiz.js`, Analytics/Sheets scripts in `<head>`
 
 When adjusting mobile quiz, read the existing `@media (max-width: 600px)` block first and make minimal diffs.

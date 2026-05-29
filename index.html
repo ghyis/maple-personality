@@ -20,7 +20,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Maple Personality Test</title>
-<!-- build: 2026-05-19-mobile-quest-fixed-top -->
+<!-- build: 2026-05-19-desktop-zoom-uniform -->
 <meta name="description" content="Take the Maple Personality Test and discover which MapleStory class best embodies your personality.">
 <link rel="preload" href="landdinggif.gif" as="image" type="image/gif" fetchpriority="high">
 <script>
@@ -1400,43 +1400,36 @@ body::after {
 }
 
 /* ============================================================
-   DESKTOP — proportional scale (layout unchanged, shrinks with window)
+   DESKTOP — checkpoint layout + uniform shrink (zoom scales everything)
    ============================================================ */
 @media screen and (min-width: 601px) {
-    :root {
-        --desk-scale: min(1, 100vw / 1120, 100dvh / 780);
-        --desk-font: calc(16px * var(--desk-scale));
-        --desk-gap: calc(10px * var(--desk-scale));
+    /*
+     * At ≥1280×900: scale 1 = exact checkpoint (a7faeaf).
+     * Below that: zoom shrinks image, progress bar, quest, buttons, fonts together.
+     * Do NOT use per-property --desk-scale (only fonts moved, not layout).
+     */
+    /*
+     * Uniform desktop zoom-out/in.
+     * The scale factor depends on the viewport size, which CSS cannot
+     * compute (dividing a length by a length is invalid), so the script
+     * at the end of <body> ("desktopUniformZoom") sets `zoom` + `height`
+     * on #home and #quiz-page on load and on resize. Everything below is
+     * locked to px so that one zoom value scales the whole page uniformly.
+     */
+
+    /* Lock quiz typography to px on desktop so vh does not resize text alone */
+    #quiz .progress-step,
+    #quiz .progress-percent {
+        font-size: 13px;
     }
 
-    .page {
-        padding: calc(16px * var(--desk-scale));
-        gap: var(--desk-gap);
-        font-size: var(--desk-font);
+    #quiz .progress-track {
+        height: 16px;
     }
 
-    .maple-title {
-        width: min(92vw, calc(680px * var(--desk-scale)));
-        transform: translate(calc(-16px * var(--desk-scale)), calc(-22px * var(--desk-scale)));
-    }
-
-    .maple-subtitle {
-        font-size: clamp(12px, calc(2.2vh * var(--desk-scale)), calc(18px * var(--desk-scale)));
-        margin: calc(-14px * var(--desk-scale)) 0 calc(4px * var(--desk-scale));
-    }
-
-    .maple-btn {
-        font-size: clamp(12px, calc(1.8vh * var(--desk-scale)), calc(16px * var(--desk-scale)));
-        padding: calc(10px * var(--desk-scale)) calc(18px * var(--desk-scale));
-    }
-
-    .progress-step,
-    .progress-percent {
-        font-size: clamp(11px, calc(1.6vh * var(--desk-scale)), calc(13px * var(--desk-scale)));
-    }
-
-    .progress-track {
-        height: clamp(12px, calc(2vh * var(--desk-scale)), 16px);
+    #quiz #question {
+        font-size: 14.5px;
+        line-height: 1.45;
     }
 
     #quiz .question-image-slot {
@@ -1444,65 +1437,32 @@ body::after {
         top: 35%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: min(95vw, calc(820px * var(--desk-scale)));
-        height: min(68vh, calc(680px * var(--desk-scale)));
+        width: 860px;
+        height: 1020px;
         flex: none;
     }
 
     #quiz #question-image {
-        max-width: min(92vw, calc(720px * var(--desk-scale)));
-        max-height: min(62vh, calc(640px * var(--desk-scale)));
-        min-width: 0;
-        min-height: 0;
-        width: auto;
-        height: auto;
+        max-width: 860px;
+        max-height: 1020px;
+        min-width: 620px;
+        min-height: 880px;
     }
 
     #quiz #quest-card {
         position: relative;
         flex: 0 0 auto;
-        margin: clamp(
-            calc(12px * var(--desk-scale)),
-            calc(52vh * var(--desk-scale)),
-            calc(520px * var(--desk-scale))
-        ) 0 calc(10px * var(--desk-scale)) !important;
-        max-height: min(46vh, calc(400px * var(--desk-scale)));
+        margin: 560px 0 10px !important;
+        max-height: 400px;
     }
 
     #quiz.is-collect-mode #quest-card {
-        margin-top: clamp(
-            calc(10px * var(--desk-scale)),
-            calc(48vh * var(--desk-scale)),
-            calc(480px * var(--desk-scale))
-        ) !important;
-    }
-
-    #quiz #quest-card.card-frame {
-        padding: calc(14px * var(--desk-scale));
-        border-radius: calc(22px * var(--desk-scale));
-    }
-
-    #quiz #quest-card .card-inner {
-        padding: calc(14px * var(--desk-scale)) calc(16px * var(--desk-scale));
-        gap: calc(8px * var(--desk-scale));
-    }
-
-    #quiz #quest-card .card-eyebrow {
-        font-size: clamp(10px, calc(1.5vh * var(--desk-scale)), calc(13px * var(--desk-scale)));
-    }
-
-    #quiz #question {
-        font-size: clamp(11px, calc(1.85vh * var(--desk-scale)), calc(15px * var(--desk-scale)));
-        line-height: 1.45;
+        margin-top: 520px !important;
     }
 
     #quiz #quest-card .card-inner,
     #quiz #choices {
         overflow: visible;
-    }
-
-    #quiz #choices {
-        gap: calc(8px * var(--desk-scale));
     }
 
     #quiz .choices {
@@ -1511,22 +1471,29 @@ body::after {
         border-radius: 999px;
         overflow: hidden;
         display: block;
-        padding: calc(11px * var(--desk-scale)) calc(22px * var(--desk-scale)) calc(11px * var(--desk-scale)) calc(38px * var(--desk-scale));
-        font-size: clamp(11px, calc(1.8vh * var(--desk-scale)), calc(14.5px * var(--desk-scale)));
+        padding: 11px 22px 11px 38px;
+        font-size: 14.5px;
     }
 
-    .card-frame {
-        max-height: min(50vh, calc(420px * var(--desk-scale)));
+    #quiz .card-eyebrow {
+        font-size: 13px;
     }
 
-    .home-landing-gif canvas,
-    .home-landing-gif img {
-        max-width: min(87.4vw, calc(494px * var(--desk-scale)));
-        max-height: min(55.1vh, calc(456px * var(--desk-scale)));
+    /* Home / landing — lock to px so the whole page zooms uniformly
+       instead of the title + gif resizing on their own vw/vh. */
+    #home .maple-title {
+        width: 680px;
     }
-
-    #result-reveal .button-row {
-        gap: calc(10px * var(--desk-scale));
+    #home .maple-subtitle {
+        font-size: 18px;
+    }
+    #home .home-landing-gif {
+        max-height: 520px;
+    }
+    #home .home-landing-gif canvas,
+    #home .home-landing-gif img {
+        max-width: 494px;
+        max-height: 456px;
     }
 }
 
@@ -2317,7 +2284,13 @@ function setupResultFlipCard(imageURL, preloadImg) {
     var naturalH = (preloadImg && preloadImg.naturalHeight) || 900;
     var maxW = reveal ? Math.min(720, reveal.clientWidth || 720) : 720;
     var buttonReserve = 12 + (actions ? actions.offsetHeight : 52);
-    var maxH = Math.max(320, window.innerHeight - 130 - buttonReserve);
+    // The results page is uniformly zoomed on desktop, so size the card in the
+    // page's own (pre-zoom) coordinate space; the page zoom then scales it to
+    // fit the viewport exactly (and keeps big-screen sizing identical, z = 1).
+    var resultsEl = document.getElementById('results');
+    var pageZoom = (resultsEl && parseFloat(resultsEl.style.zoom)) || 1;
+    var availH = window.innerHeight / pageZoom;
+    var maxH = Math.max(320, availH - 130 - buttonReserve);
     var scale = Math.min(maxW / naturalW, maxH / naturalH, 1);
     var displayW = Math.max(1, Math.round(naturalW * scale));
     var displayH = Math.max(1, Math.round(naturalH * scale));
@@ -2346,45 +2319,42 @@ function postToResultsSheet(payload) {
     if (!url) return;
 
     var body = JSON.stringify(payload);
+    var debug = window.location.search.indexOf('debug=1') !== -1;
 
-    function sendTextPlain() {
-        return fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: body,
-            keepalive: true,
-            mode: 'cors'
-        });
-    }
-
-    function sendNoCors() {
-        return fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: body,
-            keepalive: true,
-            mode: 'no-cors'
-        });
+    // Google Apps Script /exec endpoints do NOT send CORS headers, so a normal
+    // cross-origin fetch from a static host (GitHub Pages) errors out even
+    // though the request was delivered. The reliable pattern is a "simple"
+    // request — text/plain, no custom headers — sent with mode:'no-cors':
+    // the browser can't read the reply, but doPost still runs and the row is
+    // written. navigator.sendBeacon is used as a fallback.
+    function beacon() {
+        try {
+            if (navigator.sendBeacon) {
+                return navigator.sendBeacon(
+                    url,
+                    new Blob([body], { type: 'text/plain;charset=utf-8' })
+                );
+            }
+        } catch (e) {
+            if (debug) console.warn('Sheet sendBeacon failed:', e);
+        }
+        return false;
     }
 
     try {
-        sendTextPlain()
-            .then(function(res) {
-                if (res && res.ok) return res.json();
-                return sendNoCors();
-            })
-            .catch(function() {
-                return sendNoCors();
-            })
-            .catch(function(err) {
-                if (window.location.search.indexOf('debug=1') !== -1) {
-                    console.warn('Sheet log failed:', err);
-                }
-            });
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: body,
+            keepalive: true
+        }).catch(function (err) {
+            if (debug) console.warn('Sheet fetch failed, trying sendBeacon:', err);
+            beacon();
+        });
     } catch (err) {
-        try {
-            sendNoCors();
-        } catch (_) { /* ignore */ }
+        if (debug) console.warn('Sheet fetch threw, trying sendBeacon:', err);
+        beacon();
     }
 }
 
@@ -2862,8 +2832,105 @@ document.querySelector('.share-button').addEventListener('click', async function
 
 </script>
 
+<!-- Desktop uniform zoom (PC only — mobile layout untouched) -->
+<script>
+(function desktopUniformZoom() {
+    // Reference width = the "perfect" full-screen canvas. At/above DESIGN_W
+    // (and tall enough for the content) the scale is 1, identical to full
+    // screen. Below that the whole page zooms out uniformly, like browser
+    // zoom, so proportions never change.
+    var DESIGN_W = 1280;
+    var FALLBACK_H = 900;   // used until a page's content can be measured
+    var MIN_DESKTOP = 601;  // matches the @media (min-width: 601px) breakpoint
+
+    var rafPending = false;
+
+    function el(id) { return document.getElementById(id); }
+    function isVisible(node) { return !!(node && node.offsetParent !== null); }
+
+    // Layout (pre-zoom) height from a page's top down to the bottom of the
+    // element that must stay on screen. We read painted rects and divide by
+    // the current zoom, which cancels out to zoom-independent layout pixels.
+    function neededHeight(pageNode, mustFitNode, reserve) {
+        if (!isVisible(pageNode) || !mustFitNode) return 0;
+        var z = parseFloat(pageNode.style.zoom) || 1;
+        var painted = mustFitNode.getBoundingClientRect().bottom -
+                      pageNode.getBoundingClientRect().top;
+        if (painted <= 0) return 0;
+        return painted / z + (reserve || 0);
+    }
+
+    function setPageScale(pageNode, scale, vpH) {
+        if (!pageNode) return;
+        pageNode.style.zoom = scale;
+        var boxH = (vpH / scale) + 'px';
+        pageNode.style.height = boxH;
+        pageNode.style.maxHeight = boxH;
+    }
+
+    function clearPage(pageNode) {
+        if (!pageNode) return;
+        pageNode.style.zoom = '';
+        pageNode.style.height = '';
+        pageNode.style.maxHeight = '';
+    }
+
+    function apply() {
+        rafPending = false;
+        var w = window.innerWidth, h = window.innerHeight;
+        var home = el('home'), quiz = el('quiz-page'), results = el('results');
+
+        // Mobile: hand everything back to the mobile stylesheet.
+        if (w < MIN_DESKTOP) {
+            clearPage(home); clearPage(quiz); clearPage(results);
+            return;
+        }
+
+        var byWidth = w / DESIGN_W;
+
+        // Home — fixed-size content, so a fixed reference height is enough.
+        setPageScale(home, Math.min(1, byWidth, h / FALLBACK_H), h);
+
+        // Quiz — measure the real quest-card bottom so any number of answer
+        // choices (2, 3, 4 …) is always fully contained within the window.
+        var quizNeed = neededHeight(quiz, el('quest-card'), 24) || FALLBACK_H;
+        setPageScale(quiz, Math.min(1, byWidth, h / quizNeed), h);
+
+        // Results — fixed reference; the flip-card sizes itself into the
+        // (pre-zoom) space and this zoom scales the whole page uniformly.
+        setPageScale(results, Math.min(1, byWidth, h / FALLBACK_H), h);
+    }
+
+    function schedule() {
+        if (rafPending) return;
+        rafPending = true;
+        window.requestAnimationFrame(apply);
+    }
+
+    apply();
+    window.addEventListener('resize', schedule);
+    window.addEventListener('orientationchange', schedule);
+    window.addEventListener('load', apply);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', apply);
+    }
+
+    // Re-scale when the question/answers change (different choice counts change
+    // the card height) and when the quiz is first shown and populated. The
+    // observer watches the quest card only, never an element this script
+    // styles, so it can't loop.
+    var quizCard = el('quest-card');
+    if (quizCard && window.MutationObserver) {
+        new MutationObserver(schedule).observe(quizCard, {
+            childList: true, subtree: true, characterData: true,
+            attributes: true, attributeFilter: ['class']
+        });
+    }
+})();
+</script>
+
 <!-- Quiz logic -->
-<script src="MapleQuiz.js?v=12"></script>
+<script src="MapleQuiz.js?v=14"></script>
 
 </body>
 </html>

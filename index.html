@@ -7,7 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Maple Personality Test</title>
-<!-- build: 2026-05-19-mobile-quest-flow -->
+<!-- build: 2026-05-19-mobile-quest-fixed-top -->
 <meta name="description" content="Take the Maple Personality Test and discover which MapleStory class best embodies your personality.">
 <link rel="preload" href="landdinggif.gif" as="image" type="image/gif" fetchpriority="high">
 <script>
@@ -1414,6 +1414,8 @@ body::after {
     .choices { padding: 8px 12px 8px 28px; }
 
     #quiz-page.page {
+        --quiz-progress-block: 3.25rem;
+        --quiz-quest-top: 50dvh;
         --quiz-chibi-max: 52dvh;
         --quiz-choice-font: clamp(10px, 2.75vw, 11.5px);
         --quiz-choice-pad-y: 5px;
@@ -1426,22 +1428,19 @@ body::after {
     }
 
     #quiz {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: stretch;
+        position: relative;
         width: 100%;
         height: 100%;
         min-height: 0;
         overflow: hidden;
-        gap: 4px;
     }
 
     #quiz .progress-wrap {
         position: relative;
-        z-index: 3;
-        flex: 0 0 auto;
-        margin-bottom: 0;
+        z-index: 4;
+        flex-shrink: 0;
+        width: 100%;
+        margin-bottom: 4px;
     }
 
     #quiz .progress-header {
@@ -1459,14 +1458,11 @@ body::after {
     }
 
     #quiz .question-image-slot {
-        position: relative;
-        top: auto;
-        left: auto;
-        transform: none;
-        flex: 0 1 auto;
-        flex-grow: 0;
-        width: 100%;
-        height: auto;
+        position: fixed;
+        top: calc(4px + var(--quiz-progress-block) + 4px);
+        left: 10px;
+        right: 10px;
+        height: calc(var(--quiz-quest-top) - var(--quiz-progress-block) - 12px);
         max-height: var(--quiz-chibi-max);
         min-height: 0;
         margin: 0;
@@ -1476,6 +1472,7 @@ body::after {
         display: flex;
         align-items: center;
         justify-content: center;
+        transform: none;
     }
 
     #quiz #question-image {
@@ -1484,24 +1481,26 @@ body::after {
         width: auto;
         height: auto;
         max-width: min(96vw, calc(var(--quiz-chibi-max) * 1.15));
-        max-height: var(--quiz-chibi-max);
+        max-height: 100%;
         margin: 0 auto;
         object-fit: contain;
     }
 
     #quiz #quest-card {
-        position: relative;
-        flex: 0 0 auto;
+        position: fixed;
+        top: var(--quiz-quest-top);
+        left: 10px;
+        right: 10px;
+        bottom: auto;
         margin: 0 !important;
         max-width: none;
-        max-height: none;
+        max-height: calc(100dvh - var(--quiz-quest-top) - env(safe-area-inset-bottom, 0px) - 10px);
         min-height: 0;
-        width: 100%;
+        width: auto;
         z-index: 2;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        align-self: stretch;
     }
 
     #quiz #quest-card .card-inner {
@@ -1576,21 +1575,29 @@ body::after {
         display: none !important;
     }
 
+    #quiz.is-collect-mode {
+        --quiz-quest-top: 48dvh;
+    }
+
     #quiz.is-collect-mode .question-image-slot {
+        top: 8px;
+        height: calc(var(--quiz-quest-top) - 16px);
         max-height: var(--quiz-chibi-max);
     }
 
     #quiz.is-collect-mode #question-image {
-        max-height: var(--quiz-chibi-max);
+        max-height: 100%;
     }
 
     #quiz.is-collect-mode #quest-card {
+        top: var(--quiz-quest-top);
         margin: 0 !important;
-        max-height: none;
+        max-height: calc(100dvh - var(--quiz-quest-top) - env(safe-area-inset-bottom, 0px) - 10px);
     }
 }
 @media screen and (max-height: 520px) {
     #quiz-page.page {
+        --quiz-quest-top: 46dvh;
         --quiz-chibi-max: 46dvh;
         --quiz-choice-min-h: 26px;
         --quiz-choice-font: clamp(9.5px, 2.6vw, 11px);
@@ -2509,7 +2516,7 @@ document.querySelector('.share-button').addEventListener('click', () => {
 </script>
 
 <!-- Quiz logic -->
-<script src="MapleQuiz.js?v=6"></script>
+<script src="MapleQuiz.js?v=7"></script>
 
 </body>
 </html>

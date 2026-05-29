@@ -1,0 +1,19 @@
+Maple Personality — log quiz results to Google Sheets (no cookies)
+
+1. Create a new Google Sheet.
+2. Row 1 headers (optional — script adds sheet "Results" if missing):
+   timestamp | mbti | result_image | page
+3. Extensions → Apps Script → paste ResultsLogger.gs → Save.
+4. Deploy → New deployment → Type: Web app
+   - Execute as: Me
+   - Who has access: Anyone
+5. Copy the deployment URL (must end with /exec).
+6. In index.html set:
+   window.MAPLE_RESULTS_SHEET_URL = 'https://script.google.com/macros/s/XXXX/exec';
+7. Commit and push to GitHub Pages.
+
+Each finished quiz sends one POST when the result screen loads (MBTI type only — no cookies, no personal IDs).
+
+Test: open the /exec URL in a browser — you should see {"ok":true,"message":"..."}.
+
+Privacy: Anyone with the Web App URL could POST fake rows. For a small quiz this is usually fine; for stricter control add a shared secret in the script and in MAPLE_RESULTS_SHEET_URL query string.

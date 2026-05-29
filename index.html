@@ -10,6 +10,10 @@
 
   gtag('config', 'G-ZZTJVSZE1L');
 </script>
+<script>
+  // Google Sheets result log (no cookies). Paste your Apps Script Web App URL (/exec), or '' to disable.
+  window.MAPLE_RESULTS_SHEET_URL = '';
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -2230,6 +2234,28 @@ function setupResultFlipCard(imageURL, preloadImg) {
     resultImg.alt = 'Your MapleStory personality result';
 }
 
+function logQuizResultToSheet(mbtiTypeString, imageURL) {
+    var url = (window.MAPLE_RESULTS_SHEET_URL || '').trim();
+    if (!url || !mbtiTypeString) return;
+
+    var payload = {
+        mbti: mbtiTypeString,
+        resultImage: imageURL || '',
+        timestamp: new Date().toISOString(),
+        page: (window.location.pathname || '/') + (window.location.search || '')
+    };
+
+    try {
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            keepalive: true,
+            mode: 'cors'
+        }).catch(function() {});
+    } catch (_) { /* ignore */ }
+}
+
 window.showMapleResult = function(mbtiTypeString) {
     var results = document.getElementById('results');
     var loading = document.getElementById('result-loading');
@@ -2287,6 +2313,7 @@ window.showMapleResult = function(mbtiTypeString) {
 
         window.__quizDebug.mbti = mbtiTypeString;
         renderResultDetails();
+        logQuizResultToSheet(mbtiTypeString, imageURL);
     }
 
     preload.onload = function() { imageReady = true; tryRevealResult(); };

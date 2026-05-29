@@ -2,14 +2,15 @@
  * Maple Personality Test — Google Sheets logger (no cookies)
  *
  * Tabs:
- *   raw   — column A: class result (row 2+), column B: shared Yes/No
- *   graph — fixed class order + COUNTIF counts + bar chart; row 19 = Shared? count
+ *   raw   — column A: class (row 2+), column B: shared Yes/No
+ *   graph — classes rows 2–17, Shared? row 19, bar chart (rows 1–17)
  *
- * Deploy as Web app (Execute as: Me, Anyone) → paste /exec URL in index.html
+ * Deploy → Web app (Execute as: Me, Anyone). Run setupSheets once after deploy.
  */
 
 var RAW_SHEET = 'raw';
 var GRAPH_SHEET = 'graph';
+var PROP_GRAPH_READY = 'GRAPH_READY';
 
 var CLASS_ORDER = [
   'Ren', 'Kaiser', 'pally', 'Bla', 'Cad', 'Pf', 'Bish', 'Adele',
@@ -20,12 +21,8 @@ function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(30000);
   try {
-    ensureWorkbookStructure();
-
-    var body = {};
-    if (e && e.postData && e.postData.contents) {
-      body = JSON.parse(e.postData.contents);
-    }
+    var body = parsePostBody_(e);
+    ensureRawSheet_();
 
     var action = String(body.action || 'logResult');
 
@@ -51,7 +48,8 @@ function doPost(e) {
 }
 
 function doGet() {
-  ensureWorkbookStructure();
+  ensureRawSheet_();
+  ensureGraphSheetOnce_();
   return jsonOk({
     ok: true,
     message: 'Maple result logger ready. POST logResult or markShared.',
@@ -59,18 +57,28 @@ function doGet() {
   });
 }
 
-/** Run once from the script editor: Setup → setupSheets */
 function setupSheets() {
-  ensureWorkbookStructure();
+  var props = PropertiesService.getScriptProperties();
+  props.deleteProperty(PROP_GRAPH_READY);
+  ensureRawSheet_();
+  setupGraphSheet_(true);
+  props.setProperty(PROP_GRAPH_READY, '1');
 }
 
-function ensureWorkbookStructure() {
+function parsePostBody_(e) {
+  if (!e || !e.postData || !e.postData.contents) {
+    return {};
+  }
+  var raw = e.postData.contents;
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    return {};
+  }
+}
+
+function ensureRawSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  setupRawSheet_(ss);
-  setupGraphSheet_(ss);
-}
-
-function setupRawSheet_(ss) {
   var sheet = ss.getSheetByName(RAW_SHEET);
   if (!sheet) {
     sheet = ss.insertSheet(RAW_SHEET);
@@ -81,10 +89,24 @@ function setupRawSheet_(ss) {
   }
 }
 
-function setupGraphSheet_(ss) {
+function ensureGraphSheetOnce_() {
+  var props = PropertiesService.getScriptProperties();
+  if (props.getProperty(PROP_GRAPH_READY) === '1') {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(GRAPH_SHEET);
+    if (sheet && sheet.getRange(19, 1).getValue() === 'Shared?') {
+      return;
+    }
+  }
+  setupGraphSheet_(true);
+  props.setProperty(PROP_GRAPH_READY, '1');
+}
+
+function setupGraphSheet_(forceRebuild) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(GRAPH_SHEET);
   if (!sheet) {
     sheet = ss.insertSheet(GRAPH_SHEET);
+    forceRebuild = true;
   }
 
   sheet.getRange(1, 1, 1, 2).setValues([['Class', 'Count']]);
@@ -101,6 +123,10 @@ function setupGraphSheet_(ss) {
   var sharedRow = CLASS_ORDER.length + 3;
   sheet.getRange(sharedRow, 1).setValue('Shared?');
   sheet.getRange(sharedRow, 2).setFormula('=COUNTIF(raw!B:B,"Yes")');
+
+  if (!forceRebuild) {
+    return;
+  }
 
   var charts = sheet.getCharts();
   for (var c = 0; c < charts.length; c++) {
@@ -124,12 +150,19 @@ function setupGraphSheet_(ss) {
 
 function appendRawRow_(className, shared) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(RAW_SHEET);
+  if (!sheet) {
+    ensureRawSheet_();
+    sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(RAW_SHEET);
+  }
   var sharedLabel = shared ? 'Yes' : 'No';
   sheet.appendRow([className, sharedLabel]);
 }
 
 function markLastRowShared_() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(RAW_SHEET);
+  if (!sheet) {
+    return;
+  }
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) {
     return;

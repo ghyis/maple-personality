@@ -1400,40 +1400,109 @@ body::after {
 }
 
 /* ============================================================
-   DESKTOP QUIZ — keep layout isolated from mobile overrides
+   DESKTOP — proportional scale (layout unchanged, shrinks with window)
    ============================================================ */
 @media screen and (min-width: 601px) {
+    :root {
+        --desk-scale: min(1, 100vw / 1120, 100dvh / 780);
+        --desk-font: calc(16px * var(--desk-scale));
+        --desk-gap: calc(10px * var(--desk-scale));
+    }
+
+    .page {
+        padding: calc(16px * var(--desk-scale));
+        gap: var(--desk-gap);
+        font-size: var(--desk-font);
+    }
+
+    .maple-title {
+        width: min(92vw, calc(680px * var(--desk-scale)));
+        transform: translate(calc(-16px * var(--desk-scale)), calc(-22px * var(--desk-scale)));
+    }
+
+    .maple-subtitle {
+        font-size: clamp(12px, calc(2.2vh * var(--desk-scale)), calc(18px * var(--desk-scale)));
+        margin: calc(-14px * var(--desk-scale)) 0 calc(4px * var(--desk-scale));
+    }
+
+    .maple-btn {
+        font-size: clamp(12px, calc(1.8vh * var(--desk-scale)), calc(16px * var(--desk-scale)));
+        padding: calc(10px * var(--desk-scale)) calc(18px * var(--desk-scale));
+    }
+
+    .progress-step,
+    .progress-percent {
+        font-size: clamp(11px, calc(1.6vh * var(--desk-scale)), calc(13px * var(--desk-scale)));
+    }
+
+    .progress-track {
+        height: clamp(12px, calc(2vh * var(--desk-scale)), 16px);
+    }
+
     #quiz .question-image-slot {
         position: absolute;
         top: 35%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: min(118vw, 860px);
-        height: min(112vh, 1020px);
+        width: min(95vw, calc(820px * var(--desk-scale)));
+        height: min(68vh, calc(680px * var(--desk-scale)));
         flex: none;
     }
 
     #quiz #question-image {
-        max-width: min(118vw, 860px);
-        max-height: min(112vh, 1020px);
-        min-width: min(94vw, 620px);
-        min-height: min(94vh, 880px);
+        max-width: min(92vw, calc(720px * var(--desk-scale)));
+        max-height: min(62vh, calc(640px * var(--desk-scale)));
+        min-width: 0;
+        min-height: 0;
+        width: auto;
+        height: auto;
     }
 
     #quiz #quest-card {
         position: relative;
         flex: 0 0 auto;
-        margin: clamp(18px, 64vh, 560px) 0 10px !important;
-        max-height: min(48vh, 400px);
+        margin: clamp(
+            calc(12px * var(--desk-scale)),
+            calc(52vh * var(--desk-scale)),
+            calc(520px * var(--desk-scale))
+        ) 0 calc(10px * var(--desk-scale)) !important;
+        max-height: min(46vh, calc(400px * var(--desk-scale)));
     }
 
     #quiz.is-collect-mode #quest-card {
-        margin-top: clamp(14px, 60vh, 520px) !important;
+        margin-top: clamp(
+            calc(10px * var(--desk-scale)),
+            calc(48vh * var(--desk-scale)),
+            calc(480px * var(--desk-scale))
+        ) !important;
+    }
+
+    #quiz #quest-card.card-frame {
+        padding: calc(14px * var(--desk-scale));
+        border-radius: calc(22px * var(--desk-scale));
+    }
+
+    #quiz #quest-card .card-inner {
+        padding: calc(14px * var(--desk-scale)) calc(16px * var(--desk-scale));
+        gap: calc(8px * var(--desk-scale));
+    }
+
+    #quiz #quest-card .card-eyebrow {
+        font-size: clamp(10px, calc(1.5vh * var(--desk-scale)), calc(13px * var(--desk-scale)));
+    }
+
+    #quiz #question {
+        font-size: clamp(11px, calc(1.85vh * var(--desk-scale)), calc(15px * var(--desk-scale)));
+        line-height: 1.45;
     }
 
     #quiz #quest-card .card-inner,
     #quiz #choices {
         overflow: visible;
+    }
+
+    #quiz #choices {
+        gap: calc(8px * var(--desk-scale));
     }
 
     #quiz .choices {
@@ -1442,8 +1511,22 @@ body::after {
         border-radius: 999px;
         overflow: hidden;
         display: block;
-        padding: 11px 22px 11px 38px;
-        font-size: clamp(12px, 1.85vh, 14.5px);
+        padding: calc(11px * var(--desk-scale)) calc(22px * var(--desk-scale)) calc(11px * var(--desk-scale)) calc(38px * var(--desk-scale));
+        font-size: clamp(11px, calc(1.8vh * var(--desk-scale)), calc(14.5px * var(--desk-scale)));
+    }
+
+    .card-frame {
+        max-height: min(50vh, calc(420px * var(--desk-scale)));
+    }
+
+    .home-landing-gif canvas,
+    .home-landing-gif img {
+        max-width: min(87.4vw, calc(494px * var(--desk-scale)));
+        max-height: min(55.1vh, calc(456px * var(--desk-scale)));
+    }
+
+    #result-reveal .button-row {
+        gap: calc(10px * var(--desk-scale));
     }
 }
 
@@ -2262,15 +2345,47 @@ function postToResultsSheet(payload) {
     var url = (window.MAPLE_RESULTS_SHEET_URL || '').trim();
     if (!url) return;
 
-    try {
-        fetch(url, {
+    var body = JSON.stringify(payload);
+
+    function sendTextPlain() {
+        return fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: body,
             keepalive: true,
             mode: 'cors'
-        }).catch(function() {});
-    } catch (_) { /* ignore */ }
+        });
+    }
+
+    function sendNoCors() {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: body,
+            keepalive: true,
+            mode: 'no-cors'
+        });
+    }
+
+    try {
+        sendTextPlain()
+            .then(function(res) {
+                if (res && res.ok) return res.json();
+                return sendNoCors();
+            })
+            .catch(function() {
+                return sendNoCors();
+            })
+            .catch(function(err) {
+                if (window.location.search.indexOf('debug=1') !== -1) {
+                    console.warn('Sheet log failed:', err);
+                }
+            });
+    } catch (err) {
+        try {
+            sendNoCors();
+        } catch (_) { /* ignore */ }
+    }
 }
 
 function logQuizResultToSheet(mbtiTypeString) {
@@ -2748,7 +2863,7 @@ document.querySelector('.share-button').addEventListener('click', async function
 </script>
 
 <!-- Quiz logic -->
-<script src="MapleQuiz.js?v=11"></script>
+<script src="MapleQuiz.js?v=12"></script>
 
 </body>
 </html>

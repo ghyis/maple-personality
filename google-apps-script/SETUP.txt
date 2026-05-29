@@ -16,7 +16,7 @@ SETUP
 2. Extensions → Apps Script → replace code with ResultsLogger.gs → Save.
 3. Run setupSheets once (dropdown → setupSheets → Run → authorize).
    This creates "raw" and "graph" tabs + the chart.
-4. Deploy → New deployment → Web app
+4. Deploy → New deployment → Web app (create a NEW version after any script edit)
    - Execute as: Me
    - Who has access: Anyone
 5. Copy the URL ending in /exec.

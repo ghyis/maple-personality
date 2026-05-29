@@ -28,7 +28,7 @@ function displayQuiz() {
         },
         {
             question: "Someone in your guild's discord is flexing their gene badge that they just got after several months of running bm. What do you react with?",
-            choices: ["pog", "It's always the same ppl hitting, when will it be my turn"],
+            choices: ["pog!!!", "It's always the same ppl hitting, when will it be my turn"],
             weights: [
                 {thinkingScore: +1, feelingScore: 0 },
                 {feelingScore: +1, thinkingScore: 0 },

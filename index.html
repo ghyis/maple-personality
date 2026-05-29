@@ -293,10 +293,10 @@ body::after {
     display: block;
     width: auto;
     height: auto;
-    max-width: min(96vw, 720px);
-    max-height: min(62vh, 680px);
-    min-width: 0;
-    min-height: 0;
+    max-width: min(118vw, 860px);
+    max-height: min(112vh, 1020px);
+    min-width: min(94vw, 620px);
+    min-height: min(94vh, 880px);
     object-fit: contain;
     background: transparent;
     opacity: 0;
@@ -654,14 +654,14 @@ body::after {
     position: relative;
     z-index: 2;
     flex-shrink: 0;
-    margin-top: clamp(18px, 72vh, 620px);
+    margin-top: clamp(18px, 64vh, 560px);
     margin-bottom: 10px;
     width: 100%;
     align-self: stretch;
 }
 
 #quiz.is-collect-mode #quest-card {
-    margin-top: clamp(14px, 68vh, 580px);
+    margin-top: clamp(14px, 60vh, 520px);
 }
 
 /* ============================================================
@@ -1322,6 +1322,54 @@ body::after {
     line-height: 1.6;
     max-width: 360px;
     width: 100%;
+}
+
+/* ============================================================
+   DESKTOP QUIZ — keep layout isolated from mobile overrides
+   ============================================================ */
+@media screen and (min-width: 601px) {
+    #quiz .question-image-slot {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(118vw, 860px);
+        height: min(112vh, 1020px);
+        flex: none;
+    }
+
+    #quiz #question-image {
+        max-width: min(118vw, 860px);
+        max-height: min(112vh, 1020px);
+        min-width: min(94vw, 620px);
+        min-height: min(94vh, 880px);
+    }
+
+    #quiz #quest-card {
+        position: relative;
+        flex: 0 0 auto;
+        margin: clamp(18px, 64vh, 560px) 0 10px !important;
+        max-height: min(48vh, 400px);
+    }
+
+    #quiz.is-collect-mode #quest-card {
+        margin-top: clamp(14px, 60vh, 520px) !important;
+    }
+
+    #quiz #quest-card .card-inner,
+    #quiz #choices {
+        overflow: visible;
+    }
+
+    #quiz .choices {
+        flex-shrink: 0;
+        min-height: 0;
+        border-radius: 999px;
+        overflow: hidden;
+        display: block;
+        padding: 11px 22px 11px 38px;
+        font-size: clamp(12px, 1.85vh, 14.5px);
+    }
 }
 
 /* ============================================================

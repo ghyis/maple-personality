@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maple Personality Test</title>
 <meta name="description" content="Take the Maple Personality Test and discover which MapleStory class best embodies your personality.">
+<link rel="preload" href="landdinggif.gif" as="image" type="image/gif" fetchpriority="high">
+<script>
+(function () {
+    window.__landingGifFetch = fetch('landdinggif.gif').then(function (res) {
+        if (!res.ok) throw new Error('landing gif preload failed');
+        return res.arrayBuffer();
+    });
+})();
+</script>
 
 <style>
 /* ============================================================
@@ -561,13 +570,19 @@ body::after {
     max-height: min(62vh, 520px);
     padding: 4px 0;
     opacity: 0;
-    animation:
-        landing-gif-fade 2s ease-out forwards,
-        landing-gif-bob 24s ease-in-out 2s infinite;
+}
+
+.home-landing-gif.is-pending,
+.home-landing-gif.is-ready {
+    opacity: 1;
+}
+
+.home-landing-gif.is-pending {
+    animation: none;
 }
 
 .home-landing-gif.is-ready {
-    opacity: 1;
+    animation: landing-gif-bob 24s ease-in-out infinite;
 }
 
 .home-landing-gif canvas,
@@ -1616,9 +1631,9 @@ body::after {
     <img class="maple-title" src="Title.png?v=3" alt="Maple Personality Test">
     <p class="maple-subtitle">Take the quiz and discover which class best embodies your personality!</p>
 
-    <div class="home-landing-gif" aria-hidden="true">
+    <div class="home-landing-gif is-pending" aria-hidden="true">
         <canvas id="home-landing-canvas" hidden></canvas>
-        <img id="home-landing-fallback" src="landdinggif.gif" alt="" hidden>
+        <img id="home-landing-fallback" src="landdinggif.gif" alt="" loading="eager" fetchpriority="high" decoding="async">
     </div>
 
     <div class="button-row">
@@ -2369,14 +2384,16 @@ document.addEventListener('DOMContentLoaded', function() {
     var MAX_FRAME_MS = 1400;
     var stopped = false;
 
-    function revealLanding() {
+    function revealCanvas() {
+        wrap.classList.remove('is-pending');
         wrap.classList.add('is-ready');
     }
 
     function useFallback() {
         canvas.hidden = true;
         fallback.hidden = false;
-        revealLanding();
+        wrap.classList.remove('is-pending');
+        wrap.classList.add('is-ready');
     }
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -2389,11 +2406,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    fetch(encodeURI('landdinggif.gif'))
-        .then(function(res) {
+    var bufferPromise = window.__landingGifFetch;
+    if (!bufferPromise) {
+        bufferPromise = fetch('landdinggif.gif').then(function(res) {
             if (!res.ok) throw new Error('landing gif fetch failed');
             return res.arrayBuffer();
-        })
+        });
+    }
+
+    bufferPromise
         .then(function(buffer) {
             var decoder = new ImageDecoder({ data: buffer, type: 'image/gif' });
             return decoder.tracks.ready.then(function() {
@@ -2417,7 +2438,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         canvas.height = result.image.displayHeight;
                         fallback.hidden = true;
                         canvas.hidden = false;
-                        revealLanding();
+                        revealCanvas();
                     }
 
                     surface.clearRect(0, 0, canvas.width, canvas.height);

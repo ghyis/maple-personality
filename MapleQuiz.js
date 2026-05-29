@@ -153,11 +153,8 @@ function displayQuiz() {
     const QUESTION_IMAGE_SCALES = {
         2: 1.015,
         3: 1.05,
-        5: 0.90,
-        8: 0.95,
         9: 1.05,
-        11: 0.97,
-        14: 0.95,
+        11: 1.02,
     };
 
     const QUESTION_IMAGE_OFFSET_Y = {
@@ -172,8 +169,12 @@ function displayQuiz() {
     };
 
     function applyQuestionImageTransform(questionImageElement, questionIndex) {
-        const scale = QUESTION_IMAGE_SCALES[questionIndex] || 1;
-        const offsetY = QUESTION_IMAGE_OFFSET_Y[questionIndex] || 0;
+        let scale = QUESTION_IMAGE_SCALES[questionIndex] || 1;
+        let offsetY = QUESTION_IMAGE_OFFSET_Y[questionIndex] || 0;
+        if (window.matchMedia('(max-width: 600px)').matches) {
+            if (scale < 1) scale = 1;
+            offsetY = Math.round(offsetY * 0.35);
+        }
         const parts = [];
         if (offsetY) parts.push('translateY(' + offsetY + 'px)');
         if (scale !== 1) parts.push('scale(' + scale + ')');

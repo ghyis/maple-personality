@@ -292,11 +292,11 @@ body::after {
 #question-image {
     display: block;
     width: auto;
-    height: 100%;
-    max-width: min(118vw, 860px);
-    max-height: min(112vh, 1020px);
-    min-width: min(94vw, 620px);
-    min-height: min(94vh, 880px);
+    height: auto;
+    max-width: min(96vw, 720px);
+    max-height: min(62vh, 680px);
+    min-width: 0;
+    min-height: 0;
     object-fit: contain;
     background: transparent;
     opacity: 0;
@@ -654,14 +654,14 @@ body::after {
     position: relative;
     z-index: 2;
     flex-shrink: 0;
-    margin-top: clamp(18px, 64vh, 560px);
+    margin-top: clamp(18px, 72vh, 620px);
     margin-bottom: 10px;
     width: 100%;
     align-self: stretch;
 }
 
 #quiz.is-collect-mode #quest-card {
-    margin-top: clamp(14px, 60vh, 520px);
+    margin-top: clamp(14px, 68vh, 580px);
 }
 
 /* ============================================================
@@ -1348,59 +1348,83 @@ body::after {
         inset: 0;
         overflow: hidden;
         max-height: 100dvh;
-        padding: 6px 10px max(8px, env(safe-area-inset-bottom, 8px));
+        padding: 4px 10px max(6px, env(safe-area-inset-bottom, 6px));
     }
 
     #quiz {
-        position: relative;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         height: 100%;
         min-height: 0;
         overflow: hidden;
+        gap: 0;
     }
 
     #quiz .progress-wrap {
         position: relative;
         z-index: 3;
-        flex-shrink: 0;
+        flex: 0 0 auto;
+        margin-bottom: 2px;
+    }
+
+    #quiz .progress-header {
+        margin-bottom: 4px;
+        gap: 10px;
+    }
+
+    #quiz .progress-step,
+    #quiz .progress-percent {
+        font-size: 11px;
+    }
+
+    #quiz .progress-track {
+        height: 14px;
     }
 
     #quiz .question-image-slot {
-        position: fixed;
-        top: 22dvh;
-        left: 50%;
-        transform: translateX(-50%);
-        width: min(88vw, 300px);
-        height: min(26dvh, 200px);
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        flex: 0 0 52dvh;
+        width: 100%;
+        height: 52dvh;
+        max-height: 52dvh;
+        min-height: 0;
         margin: 0;
         z-index: 1;
         pointer-events: none;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #quiz #question-image {
-        min-width: 0;
-        min-height: 0;
+        min-width: 0 !important;
+        min-height: 0 !important;
         width: auto;
+        max-width: min(96vw, 400px);
         height: auto;
-        max-width: 100%;
-        max-height: min(26dvh, 200px);
+        max-height: 52dvh;
+        margin: 0 auto;
+        object-fit: contain;
     }
 
     #quiz #quest-card {
-        position: fixed;
-        left: 10px;
-        right: 10px;
-        top: 50dvh;
-        bottom: auto;
-        margin: 0;
+        position: relative;
+        flex: 0 1 auto;
+        margin: -4dvh 0 0 !important;
         max-width: none;
-        max-height: calc(52dvh - env(safe-area-inset-bottom, 0px));
+        max-height: calc(100dvh - 52dvh - 3.5rem - env(safe-area-inset-bottom, 0px) - 10px);
         min-height: 0;
-        width: auto;
+        width: 100%;
         z-index: 2;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        flex-shrink: 1;
     }
 
     #quiz #quest-card .card-inner {
@@ -1409,48 +1433,59 @@ body::after {
         flex: 1 1 auto;
         min-height: 0;
         max-height: 100%;
+        gap: 6px;
         overflow: hidden;
     }
 
     #quiz #quest-card .card-eyebrow {
-        font-size: 10px;
+        font-size: 11px;
         flex-shrink: 0;
     }
 
     #quiz #quest-card.card-frame {
-        padding: 8px 10px 10px;
+        padding: 6px 8px 8px;
+        max-height: 100%;
     }
 
     #quiz #question {
         font-size: 11px;
         line-height: 1.3;
         flex-shrink: 0;
+        max-height: 4.2em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
     }
 
     #quiz #choices {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        gap: 5px;
         flex: 1 1 auto;
         min-height: 0;
-        gap: 3px;
-        padding: 2px 2px 4px;
+        padding: 0 2px 2px;
         overflow: hidden;
     }
 
     #quiz .choices {
-        flex: 1 1 0;
-        min-height: 0;
+        flex: 0 1 auto;
+        flex-shrink: 1;
+        min-height: 36px;
         display: flex;
         align-items: center;
-        padding: 5px 10px 5px 24px;
-        font-size: 10px;
-        line-height: 1.2;
+        justify-content: center;
+        padding: 8px 12px 8px 32px;
+        font-size: 12px;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: break-word;
     }
 
     #quiz .choices::before {
-        left: 12px;
-        font-size: 11px;
+        left: 14px;
+        font-size: 13px;
     }
 
     #quiz.is-collect-mode .progress-wrap {
@@ -1458,12 +1493,18 @@ body::after {
     }
 
     #quiz.is-collect-mode .question-image-slot {
-        top: 18dvh;
+        flex: 0 0 52dvh;
+        height: 52dvh;
+        max-height: 52dvh;
+    }
+
+    #quiz.is-collect-mode #question-image {
+        max-height: 52dvh;
     }
 
     #quiz.is-collect-mode #quest-card {
-        top: 42dvh;
-        max-height: calc(58dvh - env(safe-area-inset-bottom, 0px));
+        margin-top: -3dvh !important;
+        max-height: calc(100dvh - 52dvh - env(safe-area-inset-bottom, 0px) - 14px);
     }
 }
 @media screen and (max-height: 520px) {
@@ -1471,15 +1512,27 @@ body::after {
     .maple-subtitle { display: none; }
     .progress-track { height: 12px; }
     #quiz .question-image-slot {
-        top: 16dvh;
-        height: min(22dvh, 160px);
+        flex: 0 0 52dvh;
+        height: 52dvh;
+        max-height: 52dvh;
     }
     #quiz #question-image {
-        max-height: min(22dvh, 160px);
+        max-width: min(94vw, 360px);
+        max-height: 52dvh;
     }
     #quiz #quest-card {
-        top: 44dvh;
-        max-height: calc(56dvh - env(safe-area-inset-bottom, 0px));
+        margin-top: -5dvh !important;
+        max-height: calc(100dvh - 52dvh - 3rem - env(safe-area-inset-bottom, 0px) - 8px);
+    }
+    #quiz #question {
+        max-height: 4.2em;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+    }
+    #quiz .choices {
+        min-height: 36px;
+        padding: 8px 12px 8px 30px;
+        font-size: 11.5px;
     }
     #quest-card.card-frame { max-height: none; }
     .loading-gif-slot img {

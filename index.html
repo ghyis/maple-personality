@@ -2410,8 +2410,27 @@ function logQuizResultToSheet(mbtiTypeString) {
     postToResultsSheet({
         action: 'logResult',
         className: getClassNameFromMbti(mbtiTypeString),
-        shared: false
+        shared: false,
+        timestamp: getEasternTimestamp()
     });
+}
+
+// Eastern-time stamp like "2026-05-30 10:12 EST", built in the browser so it
+// rides along with the same POST that already sends class + shared.
+function getEasternTimestamp() {
+    try {
+        var parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'America/New_York',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hour12: false
+        }).formatToParts(new Date());
+        var p = {};
+        parts.forEach(function (x) { p[x.type] = x.value; });
+        var hh = (p.hour === '24') ? '00' : p.hour;
+        return p.year + '-' + p.month + '-' + p.day + ' ' + hh + ':' + p.minute + ' EST';
+    } catch (e) {
+        return new Date().toISOString();
+    }
 }
 
 function markResultSharedInSheet() {

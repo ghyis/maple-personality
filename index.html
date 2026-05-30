@@ -2365,41 +2365,75 @@ function postToResultsSheet(payload) {
     var body = JSON.stringify(payload);
     var debug = window.location.search.indexOf('debug=1') !== -1;
 
-    // Google Apps Script /exec endpoints do NOT send CORS headers, so a normal
-    // cross-origin fetch from a static host (GitHub Pages) errors out even
-    // though the request was delivered. The reliable pattern is a "simple"
-    // request — text/plain, no custom headers — sent with mode:'no-cors':
-    // the browser can't read the reply, but doPost still runs and the row is
-    // written. navigator.sendBeacon is used as a fallback.
+    function report(msg, obj) {
+        if (!debug) return;
+        console.log('[sheet] ' + msg, obj || '');
+        try {
+            var el = document.getElementById('__sheet_debug');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = '__sheet_debug';
+                el.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:99999;max-width:90vw;'
+                    + 'background:#000;color:#0f0;font:12px monospace;padding:8px 10px;border-radius:6px;'
+                    + 'white-space:pre-wrap;opacity:.9';
+                document.body.appendChild(el);
+            }
+            el.textContent += msg + (obj ? ' ' + JSON.stringify(obj) : '') + '\n';
+        } catch (e) { /* ignore */ }
+    }
+
     function beacon() {
         try {
             if (navigator.sendBeacon) {
-                return navigator.sendBeacon(
-                    url,
-                    new Blob([body], { type: 'text/plain;charset=utf-8' })
-                );
+                var ok = navigator.sendBeacon(
+                    url, new Blob([body], { type: 'text/plain;charset=utf-8' }));
+                report('sendBeacon queued=' + ok);
+                return ok;
             }
         } catch (e) {
-            if (debug) console.warn('Sheet sendBeacon failed:', e);
+            report('sendBeacon threw: ' + e);
         }
         return false;
     }
 
-    try {
-        fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: body,
-            keepalive: true
-        }).catch(function (err) {
-            if (debug) console.warn('Sheet fetch failed, trying sendBeacon:', err);
+    // 1) Try a READABLE request first. Apps Script /exec 302-redirects to a
+    //    googleusercontent.com URL that DOES return CORS headers, so a normal
+    //    fetch can often read the JSON reply — which lets us confirm the write
+    //    actually happened (and see the row/timestamp the script reports).
+    report('POST →', payload);
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: body,
+        redirect: 'follow',
+        keepalive: true
+    })
+    .then(function (res) { return res.text(); })
+    .then(function (txt) {
+        report('reply:', txt);
+    })
+    .catch(function (err) {
+        // 2) Readable attempt blocked by CORS — fall back to no-cors (delivers
+        //    the write even though we can't read the reply) + sendBeacon.
+        report('readable failed (' + err + '); falling back to no-cors');
+        try {
+            fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: body,
+                keepalive: true
+            }).then(function () {
+                report('no-cors sent');
+            }).catch(function (e2) {
+                report('no-cors failed (' + e2 + '); trying beacon');
+                beacon();
+            });
+        } catch (e3) {
+            report('no-cors threw (' + e3 + '); trying beacon');
             beacon();
-        });
-    } catch (err) {
-        if (debug) console.warn('Sheet fetch threw, trying sendBeacon:', err);
-        beacon();
-    }
+        }
+    });
 }
 
 function logQuizResultToSheet(mbtiTypeString) {

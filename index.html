@@ -154,14 +154,8 @@ body::after {
 }
 
 .maple-credits {
-    position: fixed;
-    right: max(10px, env(safe-area-inset-right, 0px));
-    bottom: max(8px, env(safe-area-inset-bottom, 0px));
-    z-index: 5;
     margin: 0;
     font-family: 'MapleStory', 'Segoe UI', system-ui, sans-serif;
-    font-size: 10px;
-    font-weight: 400;
     color: #8a9199;
     letter-spacing: 0.02em;
     line-height: 1.3;
@@ -170,8 +164,205 @@ body::after {
     user-select: none;
 }
 
+/* Landing only — below BEGIN */
+#home .maple-credits {
+    position: static;
+    flex-shrink: 0;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    pointer-events: auto;
+}
+
+#home .maple-credits a {
+    color: #6eb8ff;
+    text-decoration: none;
+    pointer-events: auto;
+}
+
+#home .maple-credits a:hover,
+#home .maple-credits a:focus-visible {
+    color: #9ed0ff;
+    text-decoration: none;
+}
+
 @media screen and (min-width: 601px) {
-    .maple-credits {
+    #home .maple-credits {
+        font-size: 14px;
+        margin-top: 12px;
+    }
+}
+
+/* Quiz / results — small fixed corner */
+.maple-credits--corner {
+    display: none;
+    position: fixed;
+    right: max(10px, env(safe-area-inset-right, 0px));
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    z-index: 5;
+    font-size: 10px;
+    font-weight: 400;
+}
+
+#home[style*="display: none"] ~ .maple-credits--corner,
+#home[style*="display:none"] ~ .maple-credits--corner {
+    display: block;
+}
+
+@media screen and (min-width: 601px) {
+    .maple-credits--corner {
+        font-size: 11px;
+    }
+}
+
+/* BGM credit — bottom left, scrolling title */
+.maple-bgm-credit {
+    position: fixed;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'MapleStory', 'Segoe UI', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.3;
+    pointer-events: none;
+}
+
+.maple-bgm-credit__icon-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    margin: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 4px;
+    color: #8a9199;
+}
+
+.maple-bgm-credit__icon-btn:hover,
+.maple-bgm-credit__icon-btn:focus-visible {
+    color: #6d7580;
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.maple-bgm-credit__icon-btn svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+}
+
+.maple-bgm-credit__menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 6px);
+    flex-direction: column;
+    gap: 3px;
+    min-width: 200px;
+    max-width: min(82vw, 300px);
+    padding: 6px 7px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #c5cad1;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(44, 50, 58, 0.14);
+    pointer-events: auto;
+    z-index: 6;
+}
+
+.maple-bgm-credit__menu.is-open {
+    display: flex;
+}
+
+.maple-bgm-credit__menu-item {
+    font-family: 'MapleStory', 'Segoe UI', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.35;
+    text-align: left;
+    color: #8a9199;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 7px;
+    cursor: pointer;
+}
+
+.maple-bgm-credit__menu-item:hover,
+.maple-bgm-credit__menu-item:focus-visible {
+    color: #6d7580;
+    background: rgba(92, 99, 112, 0.08);
+}
+
+.maple-bgm-credit__menu-item.is-active {
+    font-weight: 700;
+    color: #5c6370;
+}
+
+.maple-bgm-credit__marquee {
+    flex: 0 0 auto;
+    width: min(28vw, 96px);
+    max-width: 96px;
+    overflow: hidden;
+    contain: layout paint style;
+}
+
+.maple-bgm-credit__track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: max-content;
+    white-space: nowrap;
+    color: #8a9199;
+    text-decoration: none;
+    cursor: pointer;
+    pointer-events: auto;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    animation: maple-bgm-marquee 36s linear infinite;
+}
+
+.maple-bgm-credit__track span {
+    flex: 0 0 auto;
+    padding-right: 3rem;
+}
+
+.maple-bgm-credit__track:hover,
+.maple-bgm-credit__track:focus-visible {
+    color: #6d7580;
+    text-decoration: none;
+}
+
+@keyframes maple-bgm-marquee {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@media screen and (min-width: 601px) {
+    .maple-bgm-credit {
+        font-size: 11px;
+    }
+
+    .maple-bgm-credit__marquee {
+        width: 118px;
+        max-width: 118px;
+    }
+
+    .maple-bgm-credit__icon-btn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .maple-bgm-credit__menu-item {
         font-size: 11px;
     }
 }
@@ -200,6 +391,8 @@ body::after {
     #home.is-leaving,
     #home.is-entering,
     #quiz-page.is-entering { transition: none !important; transform: none !important; opacity: 1 !important; }
+
+    .maple-bgm-credit__track { animation: none !important; transform: none !important; }
 }
 
 /* ============================================================
@@ -1556,6 +1749,12 @@ body::after {
     #home .maple-title {
         transform: translate(-2px, -18px);
     }
+    #home .home-landing-gif {
+        max-height: min(48vh, 400px);
+    }
+    #home .button-row {
+        margin-top: -14px;
+    }
     .card-frame { padding: 12px; }
     .card-inner { padding: 12px 14px; }
     .button-row { gap: 10px; }
@@ -1783,8 +1982,6 @@ body::after {
 
 <div class="sparkles" aria-hidden="true"></div>
 <div id="maple-toast" class="maple-toast" role="status" aria-live="polite" hidden></div>
-<p class="maple-credits" aria-label="Credits">By Alkaruarts &amp; Yisz</p>
-
 <!-- ============================================================
      HOME PAGE
      ============================================================ -->
@@ -1800,6 +1997,24 @@ body::after {
 
     <div class="button-row">
         <button class="maple-btn" id="begin-quiz">BEGIN</button>
+    </div>
+    <p class="maple-credits" aria-label="Credits">By <a href="https://x.com/alkaruarts" target="_blank" rel="noopener noreferrer">Alkaruarts</a> &amp; <a href="https://www.youtube.com/@Yisz" target="_blank" rel="noopener noreferrer">Yisz</a></p>
+</div>
+
+<p class="maple-credits maple-credits--corner" aria-label="Credits">By Alkaruarts &amp; Yisz</p>
+
+<div class="maple-bgm-credit" aria-label="Background music credit">
+    <button type="button" class="maple-bgm-credit__icon-btn" aria-label="Choose background music track" aria-expanded="false" aria-controls="maple-bgm-menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
+        </svg>
+    </button>
+    <div class="maple-bgm-credit__menu" id="maple-bgm-menu" role="menu" hidden></div>
+    <div class="maple-bgm-credit__marquee">
+        <span class="maple-bgm-credit__track" role="link" tabindex="0" data-bgm-url="https://www.youtube.com/watch?v=LJ5ZXkAmqD4&amp;t=2405s" aria-label="Maplestory Lofi - Profession by NECORD MUSIC on YouTube">
+            <span class="maple-bgm-credit__track-text">Maplestory Lofi - Profession by. NECORD MUSIC</span>
+            <span class="maple-bgm-credit__track-text" aria-hidden="true">Maplestory Lofi - Profession by. NECORD MUSIC</span>
+        </span>
     </div>
 </div>
 
@@ -1904,16 +2119,26 @@ body::after {
 <!-- ============================================================
      MUSIC  (on by default, no toggle UI)
      ============================================================ -->
-<audio id="bgm-track" loop preload="auto" autoplay muted playsinline>
-    <source src="Music2.mp3" type="audio/mpeg">
-    <source src="Music1.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgm-track" src="Music1.mp3" preload="auto" autoplay muted playsinline></audio>
 
 <script>
 // ============================================================
 // Hidden debug score capture (revealed with ?debug=1)
 // ============================================================
 window.__quizDebug = { scores: {I:0,E:0,S:0,N:0,T:0,F:0,J:0,P:0} };
+
+window.MAPLE_BGM_TRACKS = [
+    {
+        title: 'Maplestory Lofi - Profession by. NECORD MUSIC',
+        url: 'https://www.youtube.com/watch?v=LJ5ZXkAmqD4&t=2405s',
+        file: 'Music1.mp3'
+    },
+    {
+        title: 'Maplestory Lofi Illiyard Moor by. NECORD MUSIC',
+        url: 'https://www.youtube.com/watch?v=47PchnnBBJA&t=2116s',
+        file: 'Music2.mp3'
+    }
+];
 
 const _origLog = console.log;
 console.log = function(...args) {
@@ -2574,6 +2799,112 @@ function renderResultDetails() {
 // Progress bar + transparent PNG visibility
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+    (function initMapleBgmCredit() {
+        var BGM_TRACKS = window.MAPLE_BGM_TRACKS;
+
+        var root = document.querySelector('.maple-bgm-credit');
+        if (!root) return;
+
+        var iconBtn = root.querySelector('.maple-bgm-credit__icon-btn');
+        var menu = root.querySelector('.maple-bgm-credit__menu');
+        var trackEl = root.querySelector('.maple-bgm-credit__track');
+        if (!iconBtn || !menu || !trackEl) return;
+
+        var activeIndex = 0;
+
+        function openBgmUrl() {
+            var url = trackEl.getAttribute('data-bgm-url');
+            if (url) window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function setActiveTrack(index, closeMenu, uiOnly) {
+            if (index < 0 || index >= BGM_TRACKS.length) return;
+            activeIndex = index;
+            var track = BGM_TRACKS[index];
+
+            trackEl.setAttribute('data-bgm-url', track.url);
+            trackEl.setAttribute('aria-label', track.title + ' on YouTube');
+
+            root.querySelectorAll('.maple-bgm-credit__track-text').forEach(function(el) {
+                el.textContent = track.title;
+            });
+
+            menu.querySelectorAll('.maple-bgm-credit__menu-item').forEach(function(btn, i) {
+                btn.classList.toggle('is-active', i === index);
+                btn.setAttribute('aria-checked', i === index ? 'true' : 'false');
+            });
+
+            trackEl.style.animation = 'none';
+            void trackEl.offsetWidth;
+            trackEl.style.animation = '';
+
+            if (!uiOnly && track.file && typeof window.switchMapleBgmFile === 'function') {
+                window.switchMapleBgmFile(track.file);
+            }
+
+            if (closeMenu) closeBgmMenu();
+        }
+
+        window.__mapleBgmUiSync = function(index) {
+            setActiveTrack(index, false, true);
+        };
+
+        function openBgmMenu() {
+            menu.hidden = false;
+            menu.classList.add('is-open');
+            iconBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeBgmMenu() {
+            menu.hidden = true;
+            menu.classList.remove('is-open');
+            iconBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleBgmMenu() {
+            if (menu.classList.contains('is-open')) closeBgmMenu();
+            else openBgmMenu();
+        }
+
+        BGM_TRACKS.forEach(function(track, index) {
+            var item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'maple-bgm-credit__menu-item' + (index === 0 ? ' is-active' : '');
+            item.setAttribute('role', 'menuitemradio');
+            item.setAttribute('aria-checked', index === 0 ? 'true' : 'false');
+            item.textContent = track.title;
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                setActiveTrack(index, true);
+            });
+            menu.appendChild(item);
+        });
+
+        iconBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleBgmMenu();
+        });
+
+        trackEl.addEventListener('click', function() {
+            openBgmUrl();
+        });
+
+        trackEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openBgmUrl();
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!root.contains(e.target)) closeBgmMenu();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeBgmMenu();
+        });
+    })();
+
     const qimg          = document.getElementById('question-image');
     const progressFill  = document.getElementById('progress-fill');
     const progressLabel = document.getElementById('progress-label');
@@ -2633,6 +2964,79 @@ document.addEventListener('DOMContentLoaded', function() {
     bgm.volume = 0.35;
 
     let unlocked = false;
+    let currentFile = 'Music1.mp3';
+    let currentIndex = 0;
+    const tracks = window.MAPLE_BGM_TRACKS || [];
+
+    function fileToIndex(file) {
+        for (let i = 0; i < tracks.length; i++) {
+            if (tracks[i].file === file) return i;
+        }
+        return -1;
+    }
+
+    window.switchMapleBgmFile = function(file) {
+        if (!file || file === currentFile) return;
+
+        const idx = fileToIndex(file);
+        if (idx >= 0) currentIndex = idx;
+
+        const wasAudible = unlocked && !bgm.muted;
+        currentFile = file;
+        bgm.src = file;
+        bgm.load();
+
+        function resumeAfterSwap() {
+            if (wasAudible) {
+                bgm.muted = false;
+                bgm.play().catch(function() { /* blocked */ });
+                return;
+            }
+            if (!unlocked) {
+                tryAutoplay();
+                return;
+            }
+            bgm.muted = true;
+            bgm.play().catch(function() { /* blocked */ });
+        }
+
+        if (bgm.readyState >= 2) {
+            resumeAfterSwap();
+        } else {
+            bgm.addEventListener('canplay', resumeAfterSwap, { once: true });
+        }
+    };
+
+    window.advanceMapleBgmTrack = function() {
+        if (!tracks.length) return;
+        const nextIndex = (currentIndex + 1) % tracks.length;
+        const next = tracks[nextIndex];
+        if (!next || !next.file) return;
+
+        currentIndex = nextIndex;
+        currentFile = next.file;
+        bgm.src = next.file;
+        bgm.load();
+
+        const playNext = function() {
+            if (unlocked) bgm.muted = false;
+            bgm.play().catch(function() { /* blocked */ });
+        };
+
+        if (typeof window.__mapleBgmUiSync === 'function') {
+            window.__mapleBgmUiSync(nextIndex);
+        }
+
+        if (bgm.readyState >= 2) {
+            playNext();
+        } else {
+            bgm.addEventListener('canplay', playNext, { once: true });
+        }
+    };
+
+    bgm.addEventListener('ended', function() {
+        window.advanceMapleBgmTrack();
+    });
 
     function detachGestureListeners() {
         document.removeEventListener('pointerdown', unlockBgm, true);

@@ -311,14 +311,11 @@ body::after {
     width: min(28vw, 96px);
     max-width: 96px;
     overflow: hidden;
-    contain: layout paint style;
+    -webkit-overflow-scrolling: touch;
 }
 
 .maple-bgm-credit__track {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    width: max-content;
+    display: inline-block;
     white-space: nowrap;
     color: #8a9199;
     text-decoration: none;
@@ -326,13 +323,15 @@ body::after {
     pointer-events: auto;
     will-change: transform;
     transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    -webkit-animation: maple-bgm-marquee 36s linear infinite;
     animation: maple-bgm-marquee 36s linear infinite;
 }
 
 .maple-bgm-credit__track span {
-    flex: 0 0 auto;
+    display: inline-block;
     padding-right: 3rem;
 }
 
@@ -343,8 +342,13 @@ body::after {
 }
 
 @keyframes maple-bgm-marquee {
-    0%   { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(-50%, 0, 0); }
+    0%   { transform: translate3d(0, 0, 0); -webkit-transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); -webkit-transform: translate3d(-50%, 0, 0); }
+}
+
+@-webkit-keyframes maple-bgm-marquee {
+    0%   { -webkit-transform: translate3d(0, 0, 0); }
+    100% { -webkit-transform: translate3d(-50%, 0, 0); }
 }
 
 @media screen and (min-width: 601px) {
@@ -391,8 +395,6 @@ body::after {
     #home.is-leaving,
     #home.is-entering,
     #quiz-page.is-entering { transition: none !important; transform: none !important; opacity: 1 !important; }
-
-    .maple-bgm-credit__track { animation: none !important; transform: none !important; }
 }
 
 /* ============================================================
@@ -1761,6 +1763,11 @@ body::after {
     .maple-btn { min-width: 0; padding: 8px 14px; font-size: 13px; }
     .choices { padding: 8px 12px 8px 28px; }
 
+    .maple-bgm-credit__track {
+        -webkit-animation: maple-bgm-marquee 36s linear infinite !important;
+        animation: maple-bgm-marquee 36s linear infinite !important;
+    }
+
     #quiz-page.page {
         --quiz-progress-block: 4rem;
         --quiz-quest-top: 50dvh;
@@ -2835,8 +2842,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             trackEl.style.animation = 'none';
+            trackEl.style.webkitAnimation = 'none';
             void trackEl.offsetWidth;
-            trackEl.style.animation = '';
+            trackEl.style.animation = 'maple-bgm-marquee 36s linear infinite';
+            trackEl.style.webkitAnimation = 'maple-bgm-marquee 36s linear infinite';
 
             if (!uiOnly && track.file && typeof window.switchMapleBgmFile === 'function') {
                 window.switchMapleBgmFile(track.file);

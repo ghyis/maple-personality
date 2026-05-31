@@ -26,7 +26,7 @@
 <link rel="icon" href="favicon-16.png?v=4" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=4" sizes="180x180">
 <!-- build: 2026-05-19-desktop-zoom-uniform -->
-<meta name="description" content="Take the Maple Personality Test and discover which MapleStory class best embodies your personality.">
+<meta name="description" content="Take the Maple Personality Test and discover which MapleStory class best represents your personality!">
 <link rel="preload" href="landdinggif.gif" as="image" type="image/gif" fetchpriority="high">
 <script>
 (function () {
@@ -2109,7 +2109,7 @@ body::after {
 <div id="home" class="page">
 
     <img class="maple-title" src="Title.png?v=3" alt="Maple Personality Test">
-    <p class="maple-subtitle">Take the quiz and discover which class best embodies your personality!</p>
+    <p class="maple-subtitle">Take the Maple Personality Test and discover which MapleStory class best represents your personality!</p>
 
     <div class="home-landing-gif is-pending" aria-hidden="true">
         <canvas id="home-landing-canvas" hidden></canvas>
@@ -2272,6 +2272,11 @@ window.MAPLE_BGM_TRACKS = [
         title: 'Maplestory Lofi Illiyard Moor by. NECORD MUSIC',
         url: 'https://www.youtube.com/watch?v=47PchnnBBJA&t=2116s',
         file: 'Music2.mp3'
+    },
+    {
+        title: 'Maplestory Lofi - Where stars rest by. NECORD MUSIC',
+        url: 'https://www.youtube.com/watch?v=47PchnnBBJA&t=1758s',
+        file: 'Music3.mp3'
     }
 ];
 
@@ -2313,6 +2318,30 @@ const MBTI_IMAGE_URLS = {
     ENFJ: 'result_nl.png',
     ENTJ: 'result_merc.png',
 };
+
+/** Discord share paste — one string per MBTI (image markdown + site link). */
+const MAPLE_SHARE_DISCORD_TEXT = {
+    ISTJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756976827568178/result_ren.png?ex=6a1df993&is=6a1ca813&hm=a339001d69a3666d41277cd34c77f75a53de42b423a97f7c6e3139d6f7051680&)\nhttps://ghyis.github.io/maple-personality/',
+    ISFJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756950089142293/result_kaiser.png?ex=6a1df98d&is=6a1ca80d&hm=c8fa3cb0392e82ada223f9a033ae607aec10939fd2ea13f7102d652e902e8510&)\nhttps://ghyis.github.io/maple-personality/',
+    INFJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756976051753090/result_pally.png?ex=6a1df993&is=6a1ca813&hm=75fbea4b9e8f3e189052eadc81c4e086cd90287b0e7742cc7c613da6b0857428&)\nhttps://ghyis.github.io/maple-personality/',
+    INTJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756948671463514/result_bla.png?ex=6a1df98d&is=6a1ca80d&hm=0978ade913f2e12009451c5286586c72400a931c75ecb26a6fdff8f6b72d3702&)\nhttps://ghyis.github.io/maple-personality/',
+    ISTP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756949052882995/result_cad.png?ex=6a1df98d&is=6a1ca80d&hm=a7e8f14e778dde337160f99c861d5346c4e16efa93ddae1edf74d9d3c23fb4eb&)\nhttps://ghyis.github.io/maple-personality/',
+    ISFP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756947526291466/result_pf.png?ex=6a1df98c&is=6a1ca80c&hm=81ec30f4bdb1f380e15c8fe5639aa1f5f107e4bdd0043d4ef41c55ee83bf4a1a&)\nhttps://ghyis.github.io/maple-personality/',
+    INFP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756948323209297/result_bish.png?ex=6a1df98c&is=6a1ca80c&hm=d1c4b2a00cf7b392112f838c85da8fb3c27b820dadc1a798836aa22ea2aee137&)\nhttps://ghyis.github.io/maple-personality/',
+    INTP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756974487277828/result_adele.png?ex=6a1df993&is=6a1ca813&hm=fa22bd5ca00630a768867beca71591874afb98f6823c688daac6b0e8b7298324&)\nhttps://ghyis.github.io/maple-personality/',
+    ESTP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756949547946174/result_ds.png?ex=6a1df98d&is=6a1ca80d&hm=2b71fc14538d4d8605e00996b36c74785fc878eb4dda156944cde8406172872e&)\nhttps://ghyis.github.io/maple-personality/',
+    ESFP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756977490526288/result_ab.png?ex=6a1df993&is=6a1ca813&hm=b146557fa730f804094f5251a61e0fd91f8ff8cf4ce6d24385d811fee6fecc48&)\nhttps://ghyis.github.io/maple-personality/',
+    ENFP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756950541992169/result_lara.png?ex=6a1df98d&is=6a1ca80d&hm=9583db0b3032778541db84b05c98cc62a961fad5ae06a3d588288dbdb4bb6a50&)\nhttps://ghyis.github.io/maple-personality/',
+    ENTP: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756974915092500/result_hayato.png?ex=6a1df993&is=6a1ca813&hm=46cd9fdf9f4ae74218cc5ac67c7866640eeb1989551e47354ba054cdb9e0629d&)\nhttps://ghyis.github.io/maple-personality/',
+    ESTJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756947924746331/result_shad.png?ex=6a1df98c&is=6a1ca80c&hm=db13c77ff706f468cc2cd615550cb1ce4f1c67fa12274aa31db6ac41a7d625f1&)\nhttps://ghyis.github.io/maple-personality/',
+    ESFJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756975439253534/result_hero.png?ex=6a1df993&is=6a1ca813&hm=e8ae9d402a61bb5a91f8e05a78ee643bb8a6f84639b364c51e184abb2f369d55&)\nhttps://ghyis.github.io/maple-personality/',
+    ENFJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756951456354505/result_nl.png?ex=6a1df98d&is=6a1ca80d&hm=83f5d27849859a5bcd8d56e6d7d38b623bd08b014d578a770b4ccdf728329da2&)\nhttps://ghyis.github.io/maple-personality/',
+    ENTJ: '[**Your Maple Personality Result!**](https://cdn.discordapp.com/attachments/1403454282220441852/1510756951057895584/result_merc.png?ex=6a1df98d&is=6a1ca80d&hm=7af2734f8c3bf7b2be9341eda942dc9fbc3e0b8b6f795e53d00a40ee68ad744d&)\nhttps://ghyis.github.io/maple-personality/'
+};
+
+function getShareDiscordText(mbtiTypeString) {
+    return MAPLE_SHARE_DISCORD_TEXT[mbtiTypeString] || '';
+}
 
 /** Sheet / graph labels (must match google-apps-script ResultsLogger.gs CLASS_ORDER) */
 const MBTI_TO_CLASS = {
@@ -2849,7 +2878,7 @@ window.showMapleResult = function(mbtiTypeString) {
 
     if (!results || !loading || !reveal || !statusEl || !resultImg) return;
 
-    window.__mapleResultSession = { logged: false, shared: false };
+    window.__mapleResultSession = { logged: false, shared: false, mbti: mbtiTypeString };
 
     resetResultFlipCard();
     reveal.hidden = true;
@@ -3497,87 +3526,46 @@ function showMapleToast(message, durationMs) {
     }, durationMs || 2800);
 }
 
-function downloadResultImage(img) {
-    const a = document.createElement('a');
-    a.href = img.src;
-    const srcParts = img.src.split('/');
-    a.download = srcParts[srcParts.length - 1] || 'my-maplecard.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-function waitForResultImage(img) {
-    if (img.complete && img.naturalWidth > 0) {
-        return Promise.resolve();
+function copyTextToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
     }
     return new Promise(function(resolve, reject) {
-        img.addEventListener('load', resolve, { once: true });
-        img.addEventListener('error', reject, { once: true });
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;left:-9999px;top:0;';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            if (document.execCommand('copy')) resolve();
+            else reject(new Error('Copy failed'));
+        } catch (err) {
+            reject(err);
+        } finally {
+            document.body.removeChild(ta);
+        }
     });
 }
 
-async function copyResultImageToClipboard(img) {
-    await waitForResultImage(img);
-
-    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
-        throw new Error('Clipboard API not supported');
-    }
-
-    var blob = null;
-
-    try {
-        var response = await fetch(img.src, { cache: 'force-cache' });
-        if (response.ok) {
-            blob = await response.blob();
-        }
-    } catch (_) { /* fall through to canvas */ }
-
-    if (!blob || !blob.type.startsWith('image/')) {
-        var canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        var ctx = canvas.getContext('2d');
-        if (!ctx) throw new Error('Canvas not supported');
-        ctx.drawImage(img, 0, 0);
-        blob = await new Promise(function(resolve, reject) {
-            canvas.toBlob(function(b) {
-                if (b) resolve(b);
-                else reject(new Error('Could not encode image'));
-            }, 'image/png');
-        });
-    }
-
-    var type = blob.type && blob.type.startsWith('image/') ? blob.type : 'image/png';
-    await navigator.clipboard.write([
-        new ClipboardItem((function() {
-            var item = {};
-            item[type] = blob;
-            return item;
-        })())
-    ]);
-}
-
 document.querySelector('.share-button').addEventListener('click', async function() {
-    var img = document.getElementById('result-card-img');
-    if (!img || !img.src) {
+    var mbti =
+        (window.__mapleResultSession && window.__mapleResultSession.mbti) ||
+        (window.__quizDebug && window.__quizDebug.mbti);
+    var shareText = getShareDiscordText(mbti);
+
+    if (!shareText) {
         showMapleToast('Reveal your MapleCard first!');
         return;
     }
 
     try {
-        await copyResultImageToClipboard(img);
+        await copyTextToClipboard(shareText);
         markResultSharedInSheet();
-        showMapleToast('Image copied to clipboard!');
+        showMapleToast('Discord share text copied! Paste with Ctrl+V.', 2800);
     } catch (err) {
-        console.warn('Clipboard copy failed, downloading instead:', err);
-        try {
-            downloadResultImage(img);
-            markResultSharedInSheet();
-            showMapleToast('Could not copy — image downloaded instead.', 3200);
-        } catch (downloadErr) {
-            showMapleToast('Could not copy or download the image.', 3200);
-        }
+        console.warn('Share text copy failed:', err);
+        showMapleToast('Could not copy share text.', 2800);
     }
 });
 

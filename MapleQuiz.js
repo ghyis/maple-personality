@@ -10,7 +10,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "Your fren wants to bring someone you barely know into your ckalos pt.. What will you say?",
+            question: "Your fren wants to bring someone you barely know into your bossing party.. What will you say?",
             choices: ["Sure, new friend!", "Hell no, my meso/drops", "Idk, will they grief?"],
             weights: [
                 {extrovertScore: +1, introvertScore: 0 },
@@ -19,7 +19,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "It's SSF and you hit a 21 eternal in 10b! Do you tap to 22 or focus on your other equips?",
+            question: "Today's event is Shining starforce! You hit a 21 stars with very little money but one more star to finish this equipment forever... Will you tap to 22 or focus on tapping other equips that are not 21?",
             choices: ["I'm feeling lucky today", "This is a big dmg increase already and I have gains to make elsewhere"],
             weights: [
                 {feelingScore: +1, thinkingScore: 0 },
@@ -27,7 +27,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "Someone in your guild's discord is flexing their gene badge that they just got after several months of running bm. What do you react with?",
+            question: "Someone in your guild's discord is flexing their extremely rare drop that they just got after several months of running the boss!! What do you react with?",
             choices: ["pog!!!", "It's always the same ppl hitting, when will it be my turn"],
             weights: [
                 {thinkingScore: +1, feelingScore: 0 },
@@ -73,7 +73,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "Your main just lost -20% fd in the most recent balance patch.. will you",
+            question: "Your main just lost more than 20% damage in the most recent balance patch... will you:",
             choices: ["Switch to a stronger class that just got 30% fd", "Stick with your class and pray to chang soup it gets buffed"],
             weights: [
                 {thinkingScore: +1, feelingScore: 0 },
@@ -81,7 +81,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "Your mule gets a pitch drop. You think..",
+            question: "Your mule gets a rare pitch drop!",
             choices: ["Yay, a pitch!", "Why couldn't it be my main"],
             weights: [
                 {perceivingScore: +1, judgingScore: 0 },
@@ -89,7 +89,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "You start cubing and hit a fake 3 line with 2 allstats on your freshly made 22 eternals with 2b left in the bank! Do you:",
+            question: "You start cubing and hit 3 usable lines on your freshly made 22 star eternal gear... You then realize you don't have much money to continue. Will you:",
             choices: ["My eternals deserve better!! Continue bluecubing!", "Purple cube the rest…..", "No moni broke….. settle"],
             weights: [
                 {sensingScore: +1, intuitionScore: 0 },
@@ -107,7 +107,7 @@ function displayQuiz() {
             ]
         },
         {
-            question: "Your friend is fairly new.. He's depressed because he boomed 3 CRA's and he's having second thoughts about this game. What do you tell him?",
+            question: "Your friend is new.. He's depressed because he boomed 3 pieces of gear and is having second thoughts about this game. What do you tell him?",
             choices: ["Should take a break..!", "It's okay, I've boomed much more", "Time to farm up again!"],
             weights: [
                 {feelingScore: +1, thinkingScore: 0 },
